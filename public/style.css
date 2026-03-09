@@ -1,0 +1,264 @@
+/* RESET */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+/* FUNDO */
+
+body{
+
+  font-family: "Inter","Segoe UI",sans-serif;
+
+  background:
+  linear-gradient(
+    180deg,
+    #0f172a,
+    #020617
+  );
+
+  color:#e5e7eb;
+
+  min-height:100vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+
+  padding:30px 15px;
+}
+
+/* CONTAINER */
+
+.container{
+
+  width:100%;
+  max-width:520px;
+
+  background:rgba(15,23,42,0.65);
+
+  backdrop-filter:blur(12px);
+
+  border:1px solid rgba(255,255,255,0.06);
+
+  border-radius:16px;
+
+  padding:30px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.6);
+}
+
+/* LOGO */
+
+.logo-area{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.logo-area img{
+  width:90px;
+  margin-bottom:10px;
+}
+
+.logo-area h2{
+  font-weight:600;
+  font-size:20px;
+  color:#f1f5f9;
+}
+
+/* TITULOS DE SEÇÃO */
+
+h3{
+
+  margin-top:22px;
+  margin-bottom:12px;
+
+  font-size:14px;
+
+  letter-spacing:1px;
+
+  text-transform:uppercase;
+
+  color:#94a3b8;
+}
+
+/* LABEL */
+
+label{
+
+  display:block;
+
+  margin-bottom:6px;
+
+  font-size:13px;
+
+  color:#cbd5f5;
+
+  font-weight:500;
+}
+
+/* TEXTOS PEQUENOS */
+
+small{
+
+  display:block;
+
+  margin-bottom:8px;
+
+  font-size:12px;
+
+  color:#64748b;
+}
+
+/* INPUTS */
+
+input,
+select{
+
+  width:100%;
+
+  padding:12px;
+
+  border-radius:10px;
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  background:#020617;
+
+  color:#e5e7eb;
+
+  font-size:14px;
+
+  margin-bottom:16px;
+
+  transition:all .2s;
+}
+
+/* FOCUS */
+
+input:focus,
+select:focus{
+
+  outline:none;
+
+  border:1px solid #ef4444;
+
+  box-shadow:
+  0 0 0 2px rgba(239,68,68,0.15);
+}
+
+/* DIVISOR */
+
+hr{
+
+  border:none;
+
+  height:1px;
+
+  background:rgba(255,255,255,0.08);
+
+  margin:22px 0;
+}
+
+/* BOTÃO */
+
+button{
+
+  width:100%;
+
+  padding:14px;
+
+  border-radius:10px;
+
+  border:none;
+
+  background:
+
+  linear-gradient(
+  135deg,
+  #ef4444,
+  #b91c1c
+  );
+
+  color:white;
+
+  font-size:15px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+  margin-top:10px;
+}
+
+/* HOVER */
+
+button:hover{
+
+  transform:translateY(-1px);
+
+  box-shadow:
+  0 8px 18px rgba(239,68,68,0.35);
+}
+
+/* CLICK */
+
+button:active{
+  transform:scale(.98);
+}
+
+/* HORA EXTRA ANIMAÇÃO */
+
+#extraFields{
+
+  max-height:0;
+  opacity:0;
+
+  overflow:hidden;
+
+  transition:
+  opacity .25s ease,
+  max-height .25s ease;
+}
+
+#extraFields.ativo{
+
+  max-height:200px;
+  opacity:1;
+}
+
+/* MOBILE */
+
+@media (max-width:600px){
+
+.container{
+  padding:22px;
+}
+
+.logo-area img{
+  width:70px;
+}
+
+input,
+select{
+
+  font-size:16px; /* evita zoom ios */
+
+}
+
+button{
+
+  font-size:16px;
+
+  position:sticky;
+
+  bottom:10px;
+
+}
+
+}
