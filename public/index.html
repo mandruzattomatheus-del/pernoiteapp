@@ -1,155 +1,151 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Formulário de Pernoite</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercam - Controle de Horários</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
+    <div class="logo-area">
+        <img src="assets/logo-mercam2021.png" alt="Mercam">
+        <h2>Controle de Horários</h2>
+    </div>
 
-<div class="logo-area">
-  <img src="assets/logo-mercam2021.png" alt="Logo Transportadora">
-  <h2>Controle de horários</h2>
-</div>
-<!-- precisa colocar foto/logo na pasta assest ainda --> 
+    <form id="formPernoite">
+        <label>Você é: *</label>
+        <select id="funcao" name="funcao_usuario" required>
+            <option value="">Selecione sua função</option>
+            <option value="motorista">Motorista</option>
+            <option value="ajudante">Ajudante</option>
+        </select>
 
-<form id="formPernoite">
+        <hr>
 
-<label for="motorista">Nome do colaborador</label>
-<select id="motorista" name="motorista" required>
-  <option value="">Selecione o colaborador</option>
-  <option>ALEXANDRO AYMORE DE OLIVEIRA SANTOS</option>
-  <option>ALVARO APARECIDO DE OLIVEIRA BENEDITO</option>
-  <option>BRUNO DA SILVA MEIRA</option>
-  <option>CLEITON GONZAGA DE QUEIROGA</option>
-  <option>ELIAS BORGES DE MACEDO</option>
-  <option>JEAN CARLOS RODRIGUES DO NASCIMENTO</option>
-  <option>JONAS SANTANA DOS SANTOS</option>
-  <option>JOSE CLAYTON DA SILVA RODRIGUES</option>
-  <option>JOSE CRISPIN VIEIRA DE ARAUJO</option>
-  <option>JOSE FRANCISCO DE MOURA</option>
-  <option>LEANDRO CARACIOLO DOS SANTOS</option>
-  <option>LETICIA</option>
-  <option>LUCAS GUEDES DA SILVA</option>
-  <option>MARIA DE FATIMA DOS SANTOS CARVALHO</option>
-  <option>NELSINHO</option>
-  <option>NELSON</option>
-  <option>NELSON JOSE TEIXEIRA MIRANDA</option>
-  <option>PATRICIA</option>
-  <option>PAULO EDUARDO DE OLIVEIRA</option>
-  <option>PEDRO PAIVA CARDOSO</option>
-  <option>VALÉRIA</option>
-  <option>VICTOR AUGUSTO DE OLIVEIRA</option>
-  <option>WAGNER DA SILVA PERES AMARAL</option>
-  <option>WILSON DE SOUZA</option>
-</select>
+        <div id="areaMotorista" class="hidden-section">
+            <label>Nome do Motorista *</label>
+            <select name="nome_motorista">
+                <option value="">Selecione o motorista</option>
+                <option>ALEXANDRO AYMORE DE OLIVEIRA SANTOS</option>
+                <option>ALVARO APARECIDO DE OLIVEIRA BENEDITO</option>
+                <option>BRUNO DA SILVA MEIRA</option>
+                <option>CLEITON GONZAGA DE QUEIROGA</option>
+                <option>EDER ANTONIO HENRIQUE</option>
+                <option>JEAN CARLOS RODRIGUES DO NASCIMENTO</option>
+                <option>JONAS SANTANA DOS SANTOS</option>
+                <option>JOSE CLAYTON DA SILVA RODRIGUES</option>
+                <option>JOSE CRISPIN VIEIRA DE ARAUJO</option>
+                <option>LEANDRO CARACIOLO DOS SANTOS</option>
+                <option>LUCAS GUEDES DA SILVA</option>
+                <option>NELSON JOSÉ TEIXEIRA MIRANDA</option>
+                <option>WAGNER DA SILVA PERES AMARAL</option>
+                <option>WILSON DE SOUZA</option>
+            </select>
 
-<label>Email *</label>
-<input type="email" name="email" required>
+            <label>Estava com ajudante?</label>
+            <select id="temAjudante" name="tem_ajudante">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+            </select>
 
-<label>Veículo / Placa *</label>
-<select name="placa" required>
+            <div id="blocoAjudanteDoMotorista" class="hidden-section">
+                <label>Selecione o Ajudante</label>
+                <select name="ajudante_do_motorista">
+                    <option value="">Selecione o ajudante</option>
+                    <option>AIRTON LINHARES</option>
+                    <option>COSME JOSE DE OLIVEIRA</option>
+                    <option>DAMIÃO FRANCISCO PEREIRA</option>
+                    <option>FRANCISCO DAS CHAGAS PIMENTEL JUNIOR</option>
+                    <option>FRANCISCO RODRIGUES DO NASCIMENTO</option>
+                    <option>LEONARDO ANDRADE DA SILVA</option>
+                    <option>MARCOS BARACHO DO NASCIMENTO</option>
+                    <option>NIVALDO DE BARROS</option>
+                    <option>ELIAS BORGES DE MACEDO</option>
+                </select>
+            </div>
+        </div>
 
-<option value="">Selecionar veículo</option>
+        <div id="areaAjudante" class="hidden-section">
+            <label>Seu Nome (Ajudante) *</label>
+            <select name="nome_ajudante">
+                <option value="">Selecione seu nome</option>
+                <option>AIRTON LINHARES</option>
+                <option>COSME JOSE DE OLIVEIRA</option>
+                <option>DAMIÃO FRANCISCO PEREIRA</option>
+                <option>FRANCISCO DAS CHAGAS PIMENTEL JUNIOR</option>
+                <option>FRANCISCO RODRIGUES DO NASCIMENTO</option>
+                <option>LEONARDO ANDRADE DA SILVA</option>
+                <option>MARCOS BARACHO DO NASCIMENTO</option>
+                <option>NIVALDO DE BARROS</option>
+                <option>ELIAS BORGES DE MACEDO</option>
+            </select>
 
-<option>DPM-2C71 - AUDI Q5 SB P-HIBRIDO</option>
-<option>EWW-0A64 - AUDI Q5 SB P-HIBRIDO</option>
-<option>SUC-0C28 - BMW X6 M COMPETITION</option>
-<option>DEU-7390 - Carreta Sider</option>
-<option>FNV-4C67 - Carreta Sider</option>
-<option>FXC-4H07 - Fiat - Fiorino</option>
-<option>GGT-0F64 - GWM HAVAL H6 GT</option>
-<option>FXA-0D64 - Moto Honda X-ADV</option>
-<option>EOE-0B64 - Kia Carnival</option>
-<option>EOU-0G85 - Mercedes-Benz - Atego 3030</option>
-<option>FZA-4F15 - Mercedes-Benz - ACCELO</option>
-<option>DIZ-7H62 - M BENZ - SPRINTER</option>
-<option>GKD-7A62 - M BENZ - ATEGO 2430</option>
-<option>FUZ-0422 - Volvo - FH 460</option>
-<option>UFL-0H73 - Volvo FH 460 LS Branco</option>
-<option>UGO-4F96 - Volvo FH 460 LS Prata</option>
-<option>DTB-1E11 - VW - 24250</option>
-<option>EMU-6E18 - VW - 8.150</option>
-<option>FMT-0A64 - VW - 11.180</option>
-<option>FLQ-5F07 - VW - 19.330</option>
-<option>DTD-2A80 - VW - Kombi</option>
-<option>FRE-3H48 - VW-30.330 Bi-truck Sider</option>
-<option>GGE-3C94 - Truck Sider VW-24.330</option>
-<option>SVD-0D46 - VW Express Delivery Sider</option>
-<option>TLC-4I24 - VW Express Delivery Sider</option>
-</select>
+            <label>Motorista com quem estava *</label>
+            <select name="motorista_responsavel">
+                <option value="">Selecione o motorista</option>
+                <option>ALEXANDRO AYMORE DE OLIVEIRA SANTOS</option>
+                <option>ALVARO APARECIDO DE OLIVEIRA BENEDITO</option>
+                <option>BRUNO DA SILVA MEIRA</option>
+                <option>CLEITON GONZAGA DE QUEIROGA</option>
+                <option>EDER ANTONIO HENRIQUE</option>
+                <option>JEAN CARLOS RODRIGUES DO NASCIMENTO</option>
+                <option>JONAS SANTANA DOS SANTOS</option>
+                <option>JOSE CLAYTON DA SILVA RODRIGUES</option>
+                <option>JOSE CRISPIN VIEIRA DE ARAUJO</option>
+                <option>LEANDRO CARACIOLO DOS SANTOS</option>
+                <option>LUCAS GUEDES DA SILVA</option>
+                <option>NELSON JOSÉ TEIXEIRA MIRANDA</option>
+                <option>WAGNER DA SILVA PERES AMARAL</option>
+                <option>WILSON DE SOUZA</option>
+            </select>
+        </div>
 
-<label>Cidade *</label>
-<input type="text" name="cidade" required>
+        <hr>
 
-<label>UF *</label>
-<select name="uf" required>
-<option value="">Escolher</option>
-<option value="AC">AC</option>
-<option value="AL">AL</option>
-<option value="AP">AP</option>
-<option value="AM">AM</option>
-<option value="BA">BA</option>
-<option value="CE">CE</option>
-<option value="DF">DF</option>
-<option value="ES">ES</option>
-<option value="GO">GO</option>
-<option value="MA">MA</option>
-<option value="MT">MT</option>
-<option value="MS">MS</option>
-<option value="MG">MG</option>
-<option value="PA">PA</option>
-<option value="PB">PB</option>
-<option value="PR">PR</option>
-<option value="PE">PE</option>
-<option value="PI">PI</option>
-<option value="RJ">RJ</option>
-<option value="RN">RN</option>
-<option value="RS">RS</option>
-<option value="RO">RO</option>
-<option value="RR">RR</option>
-<option value="SC">SC</option>
-<option value="SP">SP</option>
-<option value="SE">SE</option>
-<option value="TO">TO</option>
-</select>
+        <label>Email do colaborador</label>
+        <input type="email" name="email">
 
-<label>Função *</label>
-<select name="funcao" required>
-<option value="">Escolher</option>
-<option>Motorista</option>
-<option>Ajudante</option>
-</select>
+        <label>Data *</label>
+        <input type="date" name="data_registro" required>
 
-<label>Número do Romaneio/Coleta *</label>
-<small>Lembre-se que o número deve ser o mesmo do ajudante e motorista</small>
-<input type="text" name="romaneio" required>
+        <label>Romaneio / Ordem de Coleta *</label>
+        <input type="text" name="romaneio" required>
 
-<label>Data da Pernoite *</label>
-<input type="date" name="data" required>
+        <label>UF *</label>
+        <select name="uf" required>
+            <option value="">Selecionar UF</option>
+            <option value="MG">MG - MINAS GERAIS</option>
+            <option value="SP">SP - SÃO PAULO</option>
+            <option value="RJ">RJ - RIO DE JANEIRO</option>
+            <option value="ES">ES - ESPÍRITO SANTO</option>
+            <option value="PR">PR - PARANÁ</option>
+            <option value="SC">SC - SANTA CATARINA</option>
+            <option value="RS">RS - RIO GRANDE DO SUL</option>
+        </select>
 
-<hr>
+        <label>Cidade *</label>
+        <input type="text" name="cidade" required>
 
-<label>Fez Hora Extra?</label>
-<select id="horaExtra">
-<option value="nao">Não</option>
-<option value="sim">Sim</option>
-</select>
+        <hr>
 
-<div id="extraFields">
-<label>Horário de Entrada</label>
-<input type="time" name="entrada">
+        <label>Houve Pernoite?</label>
+        <select name="pernoite">
+            <option value="nao">Não</option>
+            <option value="sim">Sim</option>
+        </select>
 
-<label>Horário de Saída</label>
-<input type="time" name="saida">
-</div>
+        <div id="blocoValeDescarga">
+            <label>Trabalho foi Vale Descarga?</label>
+            <select name="vale_descarga">
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+            </select>
+        </div>
 
-<button type="submit">Enviar</button>
-
-</form>
+        <button type="submit">Enviar Registro</button>
+    </form>
 </div>
 
 <script src="script.js"></script>
