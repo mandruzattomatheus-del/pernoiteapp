@@ -123,6 +123,10 @@ button {
 .checkbox-row label {
   color: #cfd8e3;
   font-size: 0.95rem;
+  display: inline-flex;          /* <<< ajuste: label deixa de ser block aqui */
+  align-items: center;           /* <<< ajuste: alinha verticalmente com a caixa */
+  white-space: nowrap;           /* <<< ajuste: evita quebra para baixo */
+  margin: 0;                     /* não precisa de margin-bottom neste contexto */
 }
 
 /* Aplica SOMENTE aos checkboxes com a classe custom-check */
@@ -146,6 +150,7 @@ button {
   box-shadow: none;
 
   transition: border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
+  flex-shrink: 0;               /* <<< ajuste: não encolher dentro do flex */
 }
 
 .custom-check::after {

@@ -1,40 +1,6 @@
-const selectFuncao = document.getElementById("funcao");
-const areaMotorista = document.getElementById("areaMotorista");
-const areaAjudante = document.getElementById("areaAjudante");
-const blocoValeDescarga = document.getElementById("blocoValeDescarga");
-const selectTemAjudante = document.getElementById("temAjudante");
-const blocoAjudanteDoMotorista = document.getElementById("blocoAjudanteDoMotorista");
-
-selectFuncao.addEventListener("change", () => {
-    // 1. Limpa as seções de cargo para evitar repetição
-    areaMotorista.classList.add("hidden-section");
-    areaAjudante.classList.add("hidden-section");
-    
-    // 2. Lógica de visibilidade por função
-    if (selectFuncao.value === "ajudante") {
-        areaAjudante.classList.remove("hidden-section");
-        blocoValeDescarga.classList.add("hidden-section"); // Esconde Vale Descarga
-    } else if (selectFuncao.value === "motorista") {
-        areaMotorista.classList.remove("hidden-section");
-        blocoValeDescarga.classList.remove("hidden-section"); // Mostra Vale Descarga
-    } else {
-        // Se voltar para o "Selecione", mostra o padrão
-        blocoValeDescarga.classList.remove("hidden-section");
-    }
-});
-
-// Lógica de ajuda dentro da área do motorista
-selectTemAjudante.addEventListener("change", () => {
-    if (selectTemAjudante.value === "sim") {
-        blocoAjudanteDoMotorista.classList.remove("hidden-section");
-    } else {
-        blocoAjudanteDoMotorista.classList.add("hidden-section");
-    }
-});
-
+// ===== Interface e regras de visibilidade =====
 document.addEventListener("DOMContentLoaded", () => {
   const funcao = document.getElementById("funcao");
-
   const resto = document.getElementById("resto");
   const submitBtn = resto?.querySelector('button[type="submit"]');
 
@@ -45,6 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Controles internos do motorista
   const temAjudante = document.getElementById("temAjudante");
   const blocoAjudanteDoMotorista = document.getElementById("blocoAjudanteDoMotorista");
+
+  // Vale Descarga
+  const blocoValeDescarga = document.getElementById("blocoValeDescarga");
+  const inputValeDescarga = document.getElementById("valeDescarga");
 
   // Todos os campos que só devem ser obrigatórios quando o resto estiver visível
   const requiredLater = resto ? resto.querySelectorAll("[data-required]") : [];
@@ -70,14 +40,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function toggleSection(sectionEl, show) {
     if (!sectionEl) return;
+
     sectionEl.setAttribute("aria-hidden", show ? "false" : "true");
-    sectionEl.style.display = show ? "" : "none";
+    sectionEl.classList.toggle("hidden-section", !show);
+
+    // Ao mostrar: não force "block"; remova o display inline para o CSS assumir (ex.: flex).
+    // Ao ocultar: display none.
+    if (show) {
+      sectionEl.style.removeProperty('display');
+    } else {
+      sectionEl.style.display = 'none';
+    }
+
     // Habilita/desabilita campos internos
-    sectionEl.querySelectorAll("input, select, textarea")
-      .forEach((el) => {
-        if (show) el.removeAttribute("disabled");
-        else el.setAttribute("disabled", "disabled");
-      });
+    sectionEl.querySelectorAll("input, select, textarea").forEach((el) => {
+      if (show) el.removeAttribute("disabled");
+      else el.setAttribute("disabled", "disabled");
+    });
+  }
+
+  function aplicarRegraValeDescarga(papelAtual) {
+    // Ajuda de segurança: sempre limpar o check ao ocultar
+    const ocultarEVetar = () => {
+      if (inputValeDescarga) {
+        inputValeDescarga.checked = false;
+        inputValeDescarga.setAttribute("disabled", "disabled");
+      }
+      toggleSection(blocoValeDescarga, false);
+    };
+
+    const exibirELiberar = () => {
+      toggleSection(blocoValeDescarga, true);
+      if (inputValeDescarga) {
+        inputValeDescarga.removeAttribute("disabled");
+      }
+    };
+
+    // 1) Se for ajudante, oculta (mantém comportamento atual do seu código)
+    if (papelAtual === "ajudante") {
+      ocultarEVetar();
+      return;
+    }
+
+    // 2) Se for motorista, depende de "tem ajudante"
+    if (papelAtual === "motorista") {
+      const v = temAjudante?.value ?? "";
+      if (v === "sim") {
+        ocultarEVetar(); // motorista + ajudante => não pode ver/usar vale descarga
+      } else {
+        // v === "" (ainda não escolheu) OU v === "nao" => pode ver/usar
+        exibirELiberar();
+      }
+      return;
+    }
+
+    // 3) Sem função selecionada: deixar visível por padrão (não impacta pois 'resto' fica oculto)
+    exibirELiberar();
   }
 
   function atualizarInterface() {
@@ -88,17 +106,35 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resto) resto.hidden = !showResto;
     setRequiredAndDisabled(showResto);
 
+    // Regras específicas para o select "temAjudante"
+    if (papel === "motorista") {
+      // Torna obrigatório e força o placeholder para garantir escolha explícita
+      temAjudante?.setAttribute("required", "required");
+      if (temAjudante && (temAjudante.value !== "sim" && temAjudante.value !== "nao")) {
+        temAjudante.value = ""; // garante que o usuário precise escolher
+      }
+    } else {
+      // Se não for motorista, não é obrigatório
+      temAjudante?.removeAttribute("required");
+      // Opcional: resetar para placeholder quando sair de motorista
+      if (temAjudante) temAjudante.value = "";
+    }
+
     // Mostra apenas a seção do papel escolhido
     toggleSection(areaMotorista, papel === "motorista");
     toggleSection(areaAjudante, papel === "ajudante");
 
     // Ajuste do bloco "ajudante do motorista"
     if (papel === "motorista") {
-      const tem = temAjudante?.value === "sim";
+      const v = temAjudante?.value ?? "";
+      const tem = v === "sim";
       toggleSection(blocoAjudanteDoMotorista, tem);
     } else {
       toggleSection(blocoAjudanteDoMotorista, false);
     }
+
+    // >>> Regra do Vale Descarga <<<
+    aplicarRegraValeDescarga(papel);
 
     // Foco no primeiro campo disponível quando revelar
     if (showResto) {
@@ -110,13 +146,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Eventos
   funcao?.addEventListener("change", atualizarInterface);
   temAjudante?.addEventListener("change", atualizarInterface);
-
-  // Previne validação de campos ocultos (extra de robustez)
-  document.getElementById("formPernoite")?.addEventListener("submit", (e) => {
-    // Caso queira validação nativa HTML5:
-    // if (!e.target.checkValidity()) { e.preventDefault(); e.stopPropagation(); return; }
-    // Aqui podemos validar adicionalmente se necessário.
-  });
 
   // Inicializa estado
   atualizarInterface();
@@ -184,6 +213,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const value = el.value;
       if (isDisabledOrHidden(el)) return null;
       if (isRequired(el) && !value) return 'Selecione o motorista responsável.';
+      return null;
+    },
+
+    // >>> Regra específica para "tem_ajudante"
+    tem_ajudante: (el) => {
+      if (isDisabledOrHidden(el)) return null;
+      // Se estiver "required" (caso do motorista), exigir escolha explícita
+      if (isRequired(el) && !el.value) return 'Selecione se estava com ajudante.';
       return null;
     },
   };

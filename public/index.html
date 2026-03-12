@@ -48,11 +48,13 @@
             <option>Wilson de Souza</option>
         </select>
 
-        <label for="temAjudante">Estava com ajudante?</label>
-        <select id="temAjudante" name="tem_ajudante" disabled>
-          <option value="nao">Não</option>
-          <option value="sim">Sim</option>
-        </select>
+          <label for="temAjudante">Estava com ajudante?</label>
+          <select id="temAjudante" name="tem_ajudante" disabled>
+            <option value="">Selecione...</option> <!-- placeholder obrigatório -->
+            <option value="nao">Não</option>
+            <option value="sim">Sim</option>
+          </select>
+
 
         <div id="blocoAjudanteDoMotorista" class="hidden-section" aria-hidden="true">
           <label for="ajudanteDoMotorista">Selecione o Ajudante</label>
@@ -166,7 +168,7 @@
 
       <div id="blocoValeDescarga" class="checkbox-row">
         <input type="checkbox" id="valeDescarga" name="vale_descarga" class="custom-check" disabled>
-        <label for="valeDescarga">Trabalho foi Vale Descarga?</label>
+        <label for="valeDescarga">Vale Descarga?</label>
       </div>
 
       <button type="submit" disabled>Enviar Registro</button>
