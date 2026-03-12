@@ -112,6 +112,15 @@ button {
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.12);
 }
 
+.horarios {
+  display: flex;
+  gap: 10px;
+}
+
+.horarios div {
+  flex: 1;
+}
+
 /* CHECKBOX CUSTOM (OPÇÃO 2 ISOLADA) */
 .checkbox-row {
   display: flex;
