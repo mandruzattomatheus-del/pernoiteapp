@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const blocoValeDescarga = document.getElementById("blocoValeDescarga");
   const inputValeDescarga = document.getElementById("valeDescarga");
 
+  // 🔹 Veículo / Placa (novo)
+  const blocoPlaca = document.getElementById("blocoPlaca");
+  const placaSelect = document.getElementById("placaSelect");
+
   // Todos os campos que só devem ser obrigatórios quando o resto estiver visível
   const requiredLater = resto ? resto.querySelectorAll("[data-required]") : [];
 
@@ -30,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Outros selects/botões que não são required mas fazem parte do fluxo
+    // Outros selects/inputs/botão que não usam data-required mas fazem parte do fluxo
     resto.querySelectorAll("select:not([data-required]), input:not([data-required]), button[type='submit']")
       .forEach((el) => {
         if (enabled) el.removeAttribute("disabled");
@@ -38,21 +42,24 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+  // ✅ FIX: agora também sincroniza o atributo [hidden]
   function toggleSection(sectionEl, show) {
     if (!sectionEl) return;
 
     sectionEl.setAttribute("aria-hidden", show ? "false" : "true");
     sectionEl.classList.toggle("hidden-section", !show);
 
-    // Ao mostrar: não force "block"; remova o display inline para o CSS assumir (ex.: flex).
-    // Ao ocultar: display none.
+    // sincroniza o atributo 'hidden'
+    sectionEl.hidden = !show;
+
+    // Ao mostrar: remova overrides de estilo; ao ocultar: força display none (redundância segura)
     if (show) {
       sectionEl.style.removeProperty('display');
     } else {
       sectionEl.style.display = 'none';
     }
 
-    // Habilita/desabilita campos internos
+    // Habilita/desabilita campos internos da seção
     sectionEl.querySelectorAll("input, select, textarea").forEach((el) => {
       if (show) el.removeAttribute("disabled");
       else el.setAttribute("disabled", "disabled");
@@ -71,12 +78,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const exibirELiberar = () => {
       toggleSection(blocoValeDescarga, true);
-      if (inputValeDescarga) {
-        inputValeDescarga.removeAttribute("disabled");
-      }
+      if (inputValeDescarga) inputValeDescarga.removeAttribute("disabled");
     };
 
-    // 1) Se for ajudante, oculta (mantém comportamento atual do seu código)
+    // 1) Se for ajudante, oculta (mantém comportamento original)
     if (papelAtual === "ajudante") {
       ocultarEVetar();
       return;
@@ -86,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (papelAtual === "motorista") {
       const v = temAjudante?.value ?? "";
       if (v === "sim") {
-        ocultarEVetar(); // motorista + ajudante => não pode ver/usar vale descarga
+        ocultarEVetar(); // motorista + ajudante => não usa vale descarga
       } else {
         // v === "" (ainda não escolheu) OU v === "nao" => pode ver/usar
         exibirELiberar();
@@ -94,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // 3) Sem função selecionada: deixar visível por padrão (não impacta pois 'resto' fica oculto)
+    // 3) Sem função selecionada: invisível porque #resto fica oculto
     exibirELiberar();
   }
 
@@ -106,6 +111,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resto) resto.hidden = !showResto;
     setRequiredAndDisabled(showResto);
 
+    // === Veículo/Placa: mostra assim que houver função escolhida (e torna obrigatório) ===
+    if (blocoPlaca && placaSelect) {
+      toggleSection(blocoPlaca, showResto);
+      if (showResto) {
+        placaSelect.setAttribute("required", "required");
+      } else {
+        placaSelect.removeAttribute("required");
+        placaSelect.value = "";
+      }
+    }
+
     // Regras específicas para o select "temAjudante"
     if (papel === "motorista") {
       // Torna obrigatório e força o placeholder para garantir escolha explícita
@@ -116,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       // Se não for motorista, não é obrigatório
       temAjudante?.removeAttribute("required");
-      // Opcional: resetar para placeholder quando sair de motorista
+      // Resetar para placeholder quando sair de motorista
       if (temAjudante) temAjudante.value = "";
     }
 
@@ -170,7 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return null;
     },
 
-    // Exemplos de regras para outros campos obrigatórios:
     data_registro: (el) => {
       const value = el.value;
       if (isDisabledOrHidden(el)) return null;
@@ -219,20 +234,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // >>> Regra específica para "tem_ajudante"
     tem_ajudante: (el) => {
       if (isDisabledOrHidden(el)) return null;
-      // Se estiver "required" (caso do motorista), exigir escolha explícita
       if (isRequired(el) && !el.value) return 'Selecione se estava com ajudante.';
+      return null;
+    },
+
+    // 🔹 Validação para "placa" (select de veículo/placa)
+    placa: (el) => {
+      if (isDisabledOrHidden(el)) return null;
+      if (isRequired(el) && !el.value) return 'Selecione o veículo/placa.';
       return null;
     },
   };
 
   // Email regex simples e prática
   function isValidEmail(email) {
-    // cobre formatos comuns e evita extremos
     return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
   }
 
   function isRequired(el) {
-    // usa atributo native required ou nosso data-required
+    // usa atributo nativo required ou nosso data-required
     return el.hasAttribute('required') || el.hasAttribute('data-required');
   }
 

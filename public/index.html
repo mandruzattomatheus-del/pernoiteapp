@@ -48,13 +48,12 @@
             <option>Wilson de Souza</option>
         </select>
 
-          <label for="temAjudante">Estava com ajudante?</label>
-          <select id="temAjudante" name="tem_ajudante" disabled>
-            <option value="">Selecione...</option> <!-- placeholder obrigatório -->
-            <option value="nao">Não</option>
-            <option value="sim">Sim</option>
-          </select>
-
+        <label for="temAjudante">Estava com ajudante?</label>
+        <select id="temAjudante" name="tem_ajudante" disabled>
+          <option value="">Selecione...</option> <!-- placeholder obrigatório -->
+          <option value="nao">Não</option>
+          <option value="sim">Sim</option>
+        </select>
 
         <div id="blocoAjudanteDoMotorista" class="hidden-section" aria-hidden="true">
           <label for="ajudanteDoMotorista">Selecione o Ajudante</label>
@@ -119,18 +118,49 @@
       <input id="dataRegistro" type="date" name="data_registro" data-required disabled>
 
       <div class="horarios">
+        <div>
+          <label for="horaEntrada">Hora de Entrada *</label>
+          <input id="horaEntrada" type="time" name="hora_entrada" data-required disabled>
+        </div>
 
-    <div>
-    <label for="horaEntrada">Hora de Entrada *</label>
-    <input id="horaEntrada" type="time" name="hora_entrada" data-required disabled>
-     </div>
+        <div>
+          <label for="horaSaida">Hora de Saída *</label>
+          <input id="horaSaida" type="time" name="hora_saida" data-required disabled>
+        </div>
+      </div>
 
-    <div>
-    <label for="horaSaida">Hora de Saída *</label>
-    <input id="horaSaida" type="time" name="hora_saida" data-required disabled>
-    </div>
-
-     </div>
+      <!-- ✅ VEÍCULO / PLACA (ACIMA DO ROMANEIO) -->
+      <div id="blocoPlaca" class="hidden-section" aria-hidden="true" hidden>
+        <label for="placaSelect">Veículo / Placa *</label>
+        <select id="placaSelect" name="placa" disabled required>
+          <option value="">Selecionar veículo</option>
+          <option>DPM-2C71 - AUDI Q5 SB P-HIBRIDO</option>
+          <option>EWW-0A64 - AUDI Q5 SB P-HIBRIDO</option>
+          <option>SUC-0C28 - BMW X6 M COMPETITION</option>
+          <option>DEU-7390 - Carreta Sider</option>
+          <option>FNV-4C67 - Carreta Sider</option>
+          <option>FXC-4H07 - Fiat - Fiorino</option>
+          <option>GGT-0F64 - GWM HAVAL H6 GT</option>
+          <option>FXA-0D64 - Moto Honda X-ADV</option>
+          <option>EOE-0B64 - Kia Carnival</option>
+          <option>EOU-0G85 - Mercedes-Benz - Atego 3030</option>
+          <option>FZA-4F15 - Mercedes-Benz - ACCELO</option>
+          <option>DIZ-7H62 - M BENZ - SPRINTER</option>
+          <option>GKD-7A62 - M BENZ - ATEGO 2430</option>
+          <option>FUZ-0422 - Volvo - FH 460</option>
+          <option>UFL-0H73 - Volvo FH 460 LS Branco</option>
+          <option>UGO-4F96 - Volvo FH 460 LS Prata</option>
+          <option>DTB-1E11 - VW - 24250</option>
+          <option>EMU-6E18 - VW - 8.150</option>
+          <option>FMT-0A64 - VW - 11.180</option>
+          <option>FLQ-5F07 - VW - 19.330</option>
+          <option>DTD-2A80 - VW - Kombi</option>
+          <option>FRE-3H48 - VW-30.330 Bi-truck Sider</option>
+          <option>GGE-3C94 - Truck Sider VW-24.330</option>
+          <option>SVD-0D46 - VW Express Delivery Sider</option>
+          <option>TLC-4I24 - VW Express Delivery Sider</option>
+        </select>
+      </div>
 
       <label for="romaneio">Romaneio / Ordem de Coleta *</label>
       <input id="romaneio" type="text" name="romaneio" data-required disabled>
