@@ -1,54 +1,31 @@
 PRAGMA foreign_keys = ON;
 
--- =========================================
--- TABELA PRINCIPAL: um registro por envio
--- =========================================
 CREATE TABLE IF NOT EXISTS registro (
   id                      INTEGER PRIMARY KEY AUTOINCREMENT,
-
-  -- Identificação
-  nome_colaborador        TEXT    NOT NULL,                 -- vindo do select (motorista ou ajudante)
+  nome_colaborador        TEXT    NOT NULL,
   funcao                  TEXT    NOT NULL CHECK(funcao IN ('motorista','ajudante')),
-
-  -- Data / horários (strings do formulário) + métricas calculadas no backend
-  data_registro           TEXT    NOT NULL,                 -- 'YYYY-MM-DD'
-  hora_entrada            TEXT    NOT NULL,                 -- 'HH:MM'
-  hora_saida              TEXT    NOT NULL,                 -- 'HH:MM'
-  horas_trabalhadas_min   INTEGER,                          -- calculada no backend (já descontando 60 min de almoço fixo)
-  horas_extras_min        INTEGER,                          -- calculada no backend: max(0, horas_trabalhadas_min - 525)  (8h45 = 525 min)
-
-  -- Local / documento
-  romaneio                TEXT    NOT NULL,                 -- "Romaneio / Ordem de Coleta" (Documento nos holerites)
-  uf                      TEXT    NOT NULL,                 -- ex.: 'SP'
+  email                   TEXT    NOT NULL DEFAULT '',
+  data_registro           TEXT    NOT NULL,
+  hora_entrada            TEXT    NOT NULL,
+  hora_saida              TEXT    NOT NULL,
+  horas_trabalhadas_min   INTEGER,
+  horas_extras_min        INTEGER,
+  romaneio                TEXT    NOT NULL,
+  uf                      TEXT    NOT NULL,
   cidade                  TEXT    NOT NULL,
-
-  -- Veículo
-  placa                   TEXT    NOT NULL,                 -- ex.: 'EOU-0G85' (apenas a placa, sem a descrição)
-
-  -- Flags e valores por tipo
-  pernoite                INTEGER NOT NULL DEFAULT 0,       -- 0/1
-  valor_pernoite          REAL,                             -- ex.: 50.00 (setado pelo backend quando pernoite=1)
-  vale_descarga           INTEGER NOT NULL DEFAULT 0,       -- 0/1
-  valor_vale_descarga     REAL,                             -- ex.: 100.00 (setado pelo backend quando vale_descarga=1)
-
-  -- Apenas para impressão; manter vazio
-  visto_fiscal            TEXT,                             -- sempre em branco ("") para assinatura manual
-
+  placa                   TEXT    NOT NULL,
+  pernoite                INTEGER NOT NULL DEFAULT 0,
+  valor_pernoite          REAL,
+  vale_descarga           INTEGER NOT NULL DEFAULT 0,
+  valor_vale_descarga     REAL,
+  visto_fiscal            TEXT,
   criado_em               TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
--- Índices úteis
 CREATE INDEX IF NOT EXISTS idx_registro_data  ON registro (data_registro);
 CREATE INDEX IF NOT EXISTS idx_registro_flags ON registro (pernoite, vale_descarga);
 CREATE INDEX IF NOT EXISTS idx_registro_nome  ON registro (nome_colaborador);
 
--- =========================================
--- VIEWS para gerar os três holerites
--- (ajustadas para que "Visto" seja a ÚLTIMA coluna)
--- =========================================
-
--- 1) HORAS EXTRAS / CONTROLE DE JORNADA
--- Colunas: Dia | Entrada | Saída | Hora Extra | Romaneio / OC | Nome do Colaborador | Função | (auxiliares) | Visto fiscal (POR ÚLTIMO)
 DROP VIEW IF EXISTS vw_holerite_horas_extras;
 CREATE VIEW vw_holerite_horas_extras AS
 SELECT
@@ -60,14 +37,13 @@ SELECT
   romaneio                      AS "Romaneio / OC",
   nome_colaborador              AS "Nome do Colaborador",
   funcao                        AS "Função",
-  data_registro                 AS _data,                     -- auxiliares p/ filtro/ordenação
+  email                         AS _email,
+  data_registro                 AS _data,
   criado_em                     AS _criado_em,
-  ''                            AS "Visto fiscal"             -- última coluna, sempre em branco
+  ''                            AS "Visto fiscal"
 FROM registro
 WHERE COALESCE(horas_extras_min,0) > 0;
 
--- 2) RELATÓRIO DE PERNOITES
--- Colunas: DIA | PLACA | CIDADE | UF | DOCUMENTO | SERVIÇO | (auxiliares) | VISTO (POR ÚLTIMO)
 DROP VIEW IF EXISTS vw_holerite_pernoites;
 CREATE VIEW vw_holerite_pernoites AS
 SELECT
@@ -79,13 +55,12 @@ SELECT
   romaneio                      AS "DOCUMENTO",
   'R$' || replace(printf('%.2f', COALESCE(valor_pernoite, 0)), '.', ',') AS "SERVIÇO",
   nome_colaborador              AS _colaborador,
+  email                         AS _email,
   data_registro                 AS _data,
-  ''                            AS "VISTO"                    -- última coluna, sempre em branco
+  ''                            AS "VISTO"
 FROM registro
 WHERE pernoite = 1;
 
--- 3) VALE DE DESCARGA
--- Colunas: DIA | PLACA | CIDADE | UF | DOCUMENTO | SERVIÇO | (auxiliares) | VISTO (POR ÚLTIMO)
 DROP VIEW IF EXISTS vw_holerite_vale_descarga;
 CREATE VIEW vw_holerite_vale_descarga AS
 SELECT
@@ -97,7 +72,30 @@ SELECT
   romaneio                      AS "DOCUMENTO",
   'R$' || replace(printf('%.2f', COALESCE(valor_vale_descarga, 0)), '.', ',') AS "SERVIÇO",
   nome_colaborador              AS _colaborador,
+  email                         AS _email,
   data_registro                 AS _data,
-  ''                            AS "VISTO"                    -- última coluna, sempre em branco
+  ''                            AS "VISTO"
 FROM registro
 WHERE vale_descarga = 1;
+
+
+-- =========================================
+-- FILA DE E-MAILS (retry automático)
+-- =========================================
+CREATE TABLE IF NOT EXISTS email_queue (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  tipo          TEXT NOT NULL,           -- 'confirmacao' | 'holerite'
+  para          TEXT NOT NULL,           -- destinatário(s)
+  assunto       TEXT NOT NULL,
+  html          TEXT,                    -- corpo HTML (confirmação)
+  pdf_buffer    BLOB,                    -- anexo PDF (holerite)
+  pdf_filename  TEXT,                    -- nome do arquivo PDF
+  tentativas    INTEGER NOT NULL DEFAULT 0,
+  max_tentativas INTEGER NOT NULL DEFAULT 3,
+  status        TEXT NOT NULL DEFAULT 'pendente', -- 'pendente' | 'enviado' | 'falhou'
+  erro          TEXT,                    -- último erro
+  criado_em     TEXT NOT NULL DEFAULT (datetime('now')),
+  enviado_em    TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_queue_status ON email_queue (status);

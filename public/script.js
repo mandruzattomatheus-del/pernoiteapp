@@ -2,25 +2,15 @@
 document.addEventListener("DOMContentLoaded", () => {
   const funcao = document.getElementById("funcao");
   const resto = document.getElementById("resto");
-  const submitBtn = resto?.querySelector('button[type="submit"]');
 
-  // Seções por papel
   const areaMotorista = document.getElementById("areaMotorista");
   const areaAjudante = document.getElementById("areaAjudante");
-
-  // Controles internos do motorista
   const temAjudante = document.getElementById("temAjudante");
   const blocoAjudanteDoMotorista = document.getElementById("blocoAjudanteDoMotorista");
-
-  // Vale Descarga
   const blocoValeDescarga = document.getElementById("blocoValeDescarga");
   const inputValeDescarga = document.getElementById("valeDescarga");
-
-  // 🔹 Veículo / Placa (novo)
   const blocoPlaca = document.getElementById("blocoPlaca");
   const placaSelect = document.getElementById("placaSelect");
-
-  // Todos os campos que só devem ser obrigatórios quando o resto estiver visível
   const requiredLater = resto ? resto.querySelectorAll("[data-required]") : [];
 
   function setRequiredAndDisabled(enabled) {
@@ -33,8 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
         el.setAttribute("disabled", "disabled");
       }
     });
-
-    // Outros selects/inputs/botão que não usam data-required mas fazem parte do fluxo
     resto.querySelectorAll("select:not([data-required]), input:not([data-required]), button[type='submit']")
       .forEach((el) => {
         if (enabled) el.removeAttribute("disabled");
@@ -42,24 +30,16 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // ✅ FIX: agora também sincroniza o atributo [hidden]
   function toggleSection(sectionEl, show) {
     if (!sectionEl) return;
-
     sectionEl.setAttribute("aria-hidden", show ? "false" : "true");
     sectionEl.classList.toggle("hidden-section", !show);
-
-    // sincroniza o atributo 'hidden'
     sectionEl.hidden = !show;
-
-    // Ao mostrar: remova overrides de estilo; ao ocultar: força display none (redundância segura)
     if (show) {
       sectionEl.style.removeProperty('display');
     } else {
       sectionEl.style.display = 'none';
     }
-
-    // Habilita/desabilita campos internos da seção
     sectionEl.querySelectorAll("input, select, textarea").forEach((el) => {
       if (show) el.removeAttribute("disabled");
       else el.setAttribute("disabled", "disabled");
@@ -67,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function aplicarRegraValeDescarga(papelAtual) {
-    // Ajuda de segurança: sempre limpar o check ao ocultar
     const ocultarEVetar = () => {
       if (inputValeDescarga) {
         inputValeDescarga.checked = false;
@@ -75,95 +54,62 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       toggleSection(blocoValeDescarga, false);
     };
-
     const exibirELiberar = () => {
       toggleSection(blocoValeDescarga, true);
       if (inputValeDescarga) inputValeDescarga.removeAttribute("disabled");
     };
-
-    // 1) Se for ajudante, oculta (mantém comportamento original)
-    if (papelAtual === "ajudante") {
-      ocultarEVetar();
-      return;
-    }
-
-    // 2) Se for motorista, depende de "tem ajudante"
+    if (papelAtual === "ajudante") { ocultarEVetar(); return; }
     if (papelAtual === "motorista") {
       const v = temAjudante?.value ?? "";
-      if (v === "sim") {
-        ocultarEVetar(); // motorista + ajudante => não usa vale descarga
-      } else {
-        // v === "" (ainda não escolheu) OU v === "nao" => pode ver/usar
-        exibirELiberar();
-      }
+      if (v === "sim") ocultarEVetar();
+      else exibirELiberar();
       return;
     }
-
-    // 3) Sem função selecionada: invisível porque #resto fica oculto
     exibirELiberar();
   }
 
   function atualizarInterface() {
     const papel = funcao?.value;
-
-    // Mostra/oculta o bloco geral
     const showResto = Boolean(papel);
     if (resto) resto.hidden = !showResto;
     setRequiredAndDisabled(showResto);
 
-    // === Veículo/Placa: mostra assim que houver função escolhida (e torna obrigatório) ===
     if (blocoPlaca && placaSelect) {
       toggleSection(blocoPlaca, showResto);
-      if (showResto) {
-        placaSelect.setAttribute("required", "required");
-      } else {
-        placaSelect.removeAttribute("required");
-        placaSelect.value = "";
-      }
+      if (showResto) placaSelect.setAttribute("required", "required");
+      else { placaSelect.removeAttribute("required"); placaSelect.value = ""; }
     }
 
-    // Regras específicas para o select "temAjudante"
     if (papel === "motorista") {
-      // Torna obrigatório e força o placeholder para garantir escolha explícita
       temAjudante?.setAttribute("required", "required");
       if (temAjudante && (temAjudante.value !== "sim" && temAjudante.value !== "nao")) {
-        temAjudante.value = ""; // garante que o usuário precise escolher
+        temAjudante.value = "";
       }
     } else {
-      // Se não for motorista, não é obrigatório
       temAjudante?.removeAttribute("required");
-      // Resetar para placeholder quando sair de motorista
       if (temAjudante) temAjudante.value = "";
     }
 
-    // Mostra apenas a seção do papel escolhido
     toggleSection(areaMotorista, papel === "motorista");
     toggleSection(areaAjudante, papel === "ajudante");
 
-    // Ajuste do bloco "ajudante do motorista"
     if (papel === "motorista") {
-      const v = temAjudante?.value ?? "";
-      const tem = v === "sim";
+      const tem = temAjudante?.value === "sim";
       toggleSection(blocoAjudanteDoMotorista, tem);
     } else {
       toggleSection(blocoAjudanteDoMotorista, false);
     }
 
-    // >>> Regra do Vale Descarga <<<
     aplicarRegraValeDescarga(papel);
 
-    // Foco no primeiro campo disponível quando revelar
     if (showResto) {
       const firstFocusable = resto.querySelector("input:not([disabled]), select:not([disabled])");
       firstFocusable?.focus();
     }
   }
 
-  // Eventos
   funcao?.addEventListener("change", atualizarInterface);
   temAjudante?.addEventListener("change", atualizarInterface);
-
-  // Inicializa estado
   atualizarInterface();
 });
 
@@ -172,73 +118,56 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById('formPernoite');
   if (!form) return;
 
-  // Seletor de campos que queremos observar
   const FIELD_SELECTOR = 'input, select, textarea';
 
-  // Regras de validação específicas por campo (id ou name)
   const validators = {
-    // Email: obrigatório se marcado como data-required e formato válido
     email: (el) => {
       const value = String(el.value || '').trim();
-      if (isDisabledOrHidden(el)) return null; // não validar campo oculto/disabled
+      if (isDisabledOrHidden(el)) return null;
       if (isRequired(el) && !value) return 'Informe o e-mail.';
       if (value && !isValidEmail(value)) return 'Informe um e-mail válido (ex.: nome@empresa.com).';
       return null;
     },
-
     data_registro: (el) => {
-      const value = el.value;
       if (isDisabledOrHidden(el)) return null;
-      if (isRequired(el) && !value) return 'Informe a data.';
+      if (isRequired(el) && !el.value) return 'Informe a data.';
       return null;
     },
     romaneio: (el) => {
-      const value = String(el.value || '').trim();
       if (isDisabledOrHidden(el)) return null;
-      if (isRequired(el) && !value) return 'Informe o romaneio / ordem de coleta.';
+      if (isRequired(el) && !String(el.value || '').trim()) return 'Informe o romaneio / ordem de coleta.';
       return null;
     },
     uf: (el) => {
-      const value = el.value;
       if (isDisabledOrHidden(el)) return null;
-      if (isRequired(el) && !value) return 'Selecione a UF.';
+      if (isRequired(el) && !el.value) return 'Selecione a UF.';
       return null;
     },
     cidade: (el) => {
-      const value = String(el.value || '').trim();
       if (isDisabledOrHidden(el)) return null;
-      if (isRequired(el) && !value) return 'Informe a cidade.';
+      if (isRequired(el) && !String(el.value || '').trim()) return 'Informe a cidade.';
       return null;
     },
-
-    // Campos condicionais por função
     nome_motorista: (el) => {
-      const value = el.value;
       if (isDisabledOrHidden(el)) return null;
-      if (isRequired(el) && !value) return 'Selecione o motorista.';
+      if (isRequired(el) && !el.value) return 'Selecione o motorista.';
       return null;
     },
     nome_ajudante: (el) => {
-      const value = el.value;
       if (isDisabledOrHidden(el)) return null;
-      if (isRequired(el) && !value) return 'Selecione o ajudante.';
+      if (isRequired(el) && !el.value) return 'Selecione o ajudante.';
       return null;
     },
     motorista_responsavel: (el) => {
-      const value = el.value;
       if (isDisabledOrHidden(el)) return null;
-      if (isRequired(el) && !value) return 'Selecione o motorista responsável.';
+      if (isRequired(el) && !el.value) return 'Selecione o motorista responsável.';
       return null;
     },
-
-    // >>> Regra específica para "tem_ajudante"
     tem_ajudante: (el) => {
       if (isDisabledOrHidden(el)) return null;
       if (isRequired(el) && !el.value) return 'Selecione se estava com ajudante.';
       return null;
     },
-
-    // 🔹 Validação para "placa" (select de veículo/placa)
     placa: (el) => {
       if (isDisabledOrHidden(el)) return null;
       if (isRequired(el) && !el.value) return 'Selecione o veículo/placa.';
@@ -246,19 +175,14 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   };
 
-  // Email regex simples e prática
   function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
   }
-
   function isRequired(el) {
-    // usa atributo nativo required ou nosso data-required
     return el.hasAttribute('required') || el.hasAttribute('data-required');
   }
-
   function isDisabledOrHidden(el) {
     if (el.disabled) return true;
-    // se algum ancestral estiver com [hidden] ou aria-hidden="true", considerar oculto
     let node = el;
     while (node && node !== document.body) {
       if (node.hidden || node.getAttribute?.('aria-hidden') === 'true') return true;
@@ -266,9 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return false;
   }
-
   function ensureHint(el) {
-    // cria (ou obtém) a div de mensagem logo após o campo
     let hint = el.nextElementSibling;
     if (!hint || !hint.classList || !hint.classList.contains('hint')) {
       hint = document.createElement('div');
@@ -277,54 +199,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return hint;
   }
-
   function showError(el, msg) {
     const hint = ensureHint(el);
     hint.textContent = msg || '';
     el.classList.remove('is-valid');
     el.classList.toggle('is-error', Boolean(msg));
-    if (!msg) {
-      // se não há erro, aplica um "ok" discreto (opcional)
-      el.classList.add('is-valid');
-    }
-    // acessibilidade
+    if (!msg) el.classList.add('is-valid');
     el.setAttribute('aria-invalid', msg ? 'true' : 'false');
   }
-
   function validateField(el) {
     const nameOrId = el.name || el.id;
     const rule = validators[nameOrId];
     let msg = null;
-
-    // 1) use uma regra específica, se existir
     if (typeof rule === 'function') {
       msg = rule(el);
     } else {
-      // 2) fallback: required genérico
       if (!isDisabledOrHidden(el) && isRequired(el)) {
         const value = (el.type === 'checkbox' || el.type === 'radio') ? el.checked : String(el.value || '').trim();
         if (!value) msg = 'Preencha este campo.';
       }
     }
-
     showError(el, msg);
-    return !msg; // true = válido
+    return !msg;
   }
-
   function validateForm() {
     const fields = Array.from(form.querySelectorAll(FIELD_SELECTOR));
     let firstInvalid = null;
-
     for (const el of fields) {
-      // ignorar elementos sem name/id (não submetidos) e desabilitados/ocultos
       if ((!el.name && !el.id) || isDisabledOrHidden(el)) continue;
-
       const ok = validateField(el);
       if (!ok && !firstInvalid) firstInvalid = el;
     }
-
     if (firstInvalid) {
-      // impede envio e foca no primeiro problema
       firstInvalid.focus({ preventScroll: true });
       firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return false;
@@ -332,47 +238,96 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
-  // Validação ao digitar/alterar
   form.addEventListener('input', (e) => {
-    const el = e.target;
-    if (!(el instanceof HTMLElement)) return;
-    if (!el.matches?.(FIELD_SELECTOR)) return;
-    // valida só o campo alterado
-    validateField(el);
+    if (e.target instanceof HTMLElement && e.target.matches?.(FIELD_SELECTOR)) validateField(e.target);
   });
-
-  // Validação ao trocar selects/datas/etc.
   form.addEventListener('change', (e) => {
-    const el = e.target;
-    if (!(el instanceof HTMLElement)) return;
-    if (!el.matches?.(FIELD_SELECTOR)) return;
-    validateField(el);
+    if (e.target instanceof HTMLElement && e.target.matches?.(FIELD_SELECTOR)) validateField(e.target);
   });
 
-  // Bloquear envio se houver erro
-  form.addEventListener('submit', (e) => {
-    if (!validateForm()) {
-      e.preventDefault();
-      e.stopPropagation();
+  // ===== Envio via fetch =====
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!validateForm()) return;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+
+    try {
+      const data = Object.fromEntries(
+        Array.from(new FormData(form).entries())
+      );
+
+      const res = await fetch('/api/registro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(json.error || 'Erro ao enviar registro.');
+      }
+
+      // Sucesso — mostra tela de confirmação
+      mostrarSucesso();
+
+    } catch (err) {
+      mostrarErro(err.message);
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
     }
   });
+
+  function mostrarSucesso() {
+    const container = document.querySelector('.container');
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px 20px;">
+        <div style="font-size: 64px; margin-bottom: 16px;">✅</div>
+        <h2 style="margin-bottom: 12px;">Registro enviado com sucesso!</h2>
+        <p style="color: #555; margin-bottom: 8px;">Suas informações foram salvas corretamente.</p>
+        <p style="color: #555; margin-bottom: 32px;">Um e-mail de confirmação foi enviado para você.</p>
+        <button onclick="location.reload()"
+          style="padding: 12px 28px; background: #2563eb; color: #fff;
+                 border: none; border-radius: 8px; font-size: 15px; cursor: pointer;">
+          Enviar novo registro
+        </button>
+      </div>
+    `;
+  }
+
+  function mostrarErro(msg) {
+    let toast = document.getElementById('toast-erro');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'toast-erro';
+      toast.style.cssText = `
+        position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+        background: #dc2626; color: #fff; padding: 14px 24px; border-radius: 8px;
+        font-size: 14px; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      `;
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 5000);
+  }
 })();
 
 // ===== Cidades por UF (via IBGE) =====
 (() => {
-  const UF_SELECT_ID = 'uf';
-  const CITY_SELECT_ID = 'cidade';
+  const ufEl = document.getElementById('uf');
+  const cityEl = document.getElementById('cidade');
   const API_BASE = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados';
-
-  const ufEl = document.getElementById(UF_SELECT_ID);
-  const cityEl = document.getElementById(CITY_SELECT_ID);
-
-  // Cache em memória para evitar requisições repetidas
-  const cityCache = new Map(); // chave: 'SP', valor: [{id, nome}, ...]
+  const cityCache = new Map();
 
   if (!ufEl || !cityEl) return;
 
-  // Função utilitária para limpar e preparar o select de cidade
   function resetCitySelect(placeholder = 'Selecione a UF primeiro') {
     cityEl.innerHTML = '';
     const opt = document.createElement('option');
@@ -383,41 +338,32 @@ document.addEventListener("DOMContentLoaded", () => {
     cityEl.setAttribute('disabled', 'disabled');
   }
 
-  // Normalização/ordenação com acentos
   function sortByNameBR(list) {
     return list.slice().sort((a, b) =>
       a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })
     );
   }
 
-  // Popula as opções de cidade
   function fillCities(cities) {
     cityEl.innerHTML = '';
     const first = document.createElement('option');
     first.value = '';
     first.textContent = 'Selecionar cidade';
     cityEl.appendChild(first);
-
     sortByNameBR(cities).forEach(c => {
       const opt = document.createElement('option');
-      opt.value = c.nome;           // se preferir ID, use c.id
+      opt.value = c.nome;
       opt.textContent = c.nome;
       cityEl.appendChild(opt);
     });
-
     cityEl.removeAttribute('disabled');
   }
 
   async function fetchCitiesByUF(uf) {
-    // Retorna do cache se houver
     if (cityCache.has(uf)) return cityCache.get(uf);
-
-    const url = `${API_BASE}/${uf}/municipios`;
-    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    const res = await fetch(`${API_BASE}/${uf}/municipios`, { headers: { 'Accept': 'application/json' } });
     if (!res.ok) throw new Error(`IBGE respondeu ${res.status}`);
-
-    const data = await res.json(); // [{id, nome, microrregiao: {...}}]
-    // Guarda apenas {id, nome} para simplificar
+    const data = await res.json();
     const simple = data.map(({ id, nome }) => ({ id, nome }));
     cityCache.set(uf, simple);
     return simple;
@@ -425,21 +371,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function onUFChange() {
     const uf = ufEl.value;
-    if (!uf) {
-      resetCitySelect('Selecione a UF primeiro');
-      return;
-    }
-
-    // Estado de carregando
+    if (!uf) { resetCitySelect('Selecione a UF primeiro'); return; }
     resetCitySelect('Carregando cidades...');
     cityEl.removeAttribute('disabled');
-
     try {
       const cities = await fetchCitiesByUF(uf);
-      if (!cities || !cities.length) {
-        resetCitySelect('Nenhuma cidade encontrada');
-        return;
-      }
+      if (!cities || !cities.length) { resetCitySelect('Nenhuma cidade encontrada'); return; }
       fillCities(cities);
     } catch (err) {
       console.error('Erro ao buscar cidades do IBGE:', err);
@@ -447,13 +384,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Eventos
   ufEl.addEventListener('change', onUFChange);
-
-  // Se já houver uma UF preenchida (ex.: rascunho restaurado), carrega as cidades
-  if (ufEl.value) {
-    onUFChange().catch(() => {});
-  } else {
-    resetCitySelect(); // estado inicial
-  }
+  if (ufEl.value) onUFChange().catch(() => {});
+  else resetCitySelect();
 })();

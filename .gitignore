@@ -1,2 +1,3 @@
 node_modules
-.env
+.envdb/registros.db
+db/backups/

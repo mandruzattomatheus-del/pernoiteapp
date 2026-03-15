@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mercam — Painel Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: #2a2a2a;
+      --accent: #e8ff00;
+      --accent2: #ff6b35;
+      --text: #f0f0f0;
+      --muted: #666;
+      --success: #00ff88;
+      --danger: #ff3b3b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN ── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    #loginScreen::before {
+      content: 'MERCAM';
+      position: absolute;
+      font-size: 20vw;
+      font-weight: 800;
+      color: #ffffff04;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 48px;
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+      z-index: 1;
+    }
+    .login-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 60px; height: 3px;
+      background: var(--accent);
+    }
+    .login-logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .login-sub {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .field input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus { border-color: var(--accent); }
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 14px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .login-error {
+      color: var(--danger);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* ── DASHBOARD ── */
+    #dashboard { display: none; }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-brand {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .topbar-brand span {
+      color: var(--accent);
+      margin-left: 6px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 400;
+    }
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+    .main { padding: 32px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .stat-card:hover::after { transform: scaleX(1); }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 12px;
+    }
+    .stat-value {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--accent);
+    }
+
+    /* ── SEÇÕES ── */
+    .section { margin-bottom: 32px; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .section-title::before {
+      content: '//';
+      color: var(--accent);
+      margin-right: 8px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── AÇÕES ── */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .action-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px;
+    }
+    .action-card h3 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .action-card .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 2px 8px;
+      margin-bottom: 16px;
+    }
+    .controls { display: flex; flex-direction: column; gap: 10px; }
+    .controls select, .controls input[type="date"], .controls input[type="number"] {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+    .controls select:focus, .controls input:focus { border-color: var(--accent); }
+    .controls select option { background: var(--surface2); }
+    .btn-action {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 16px;
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    .btn-action:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-action.accent { background: var(--accent); color: #000; border-color: var(--accent); }
+    .btn-action.accent:hover { opacity: 0.85; }
+    .btn-action.danger { border-color: var(--accent2); color: var(--accent2); }
+    .btn-action.danger:hover { background: var(--accent2); color: #000; }
+
+    /* ── TABELA ── */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .filters {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .filters input, .filters select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .filters input:focus, .filters select:focus { border-color: var(--accent); }
+    .filters input[type="text"] { flex: 1; min-width: 180px; }
+    .btn-filter {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 20px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { border-bottom: 1px solid var(--border); }
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    td {
+      padding: 12px 16px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      border-bottom: 1px solid #1a1a1a;
+      white-space: nowrap;
+    }
+    tbody tr { transition: background 0.15s; }
+    tbody tr:hover { background: var(--surface2); }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+    .badge-yes { background: #00ff8820; color: var(--success); border: 1px solid #00ff8840; }
+    .badge-no  { background: #ffffff08; color: var(--muted);   border: 1px solid var(--border); }
+    .badge-motor { background: #e8ff0015; color: var(--accent); border: 1px solid #e8ff0030; }
+    .badge-ajud  { background: #ff6b3515; color: var(--accent2); border: 1px solid #ff6b3530; }
+    .empty-state {
+      text-align: center;
+      padding: 48px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 14px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      z-index: 9999;
+      display: none;
+      border-left: 3px solid var(--accent);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      max-width: 360px;
+    }
+    #toast.error { border-left-color: var(--danger); }
+    #toast.success { border-left-color: var(--success); }
+
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .actions-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Mercam</div>
+    <div class="login-sub">Painel Administrativo</div>
+    <div class="field">
+      <label>Usuário</label>
+      <input type="text" id="loginUser" placeholder="admin" autocomplete="username"/>
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="loginError">Usuário ou senha inválidos.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <div class="topbar-brand">Mercam <span>// ADMIN</span></div>
+    <button class="btn-logout" onclick="doLogout()">Sair</button>
+  </div>
+
+  <div class="main">
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total de Registros</div>
+        <div class="stat-value" id="statTotal">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pernoites</div>
+        <div class="stat-value" id="statPernoites">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Vales Descarga</div>
+        <div class="stat-value" id="statVales">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Com Horas Extras</div>
+        <div class="stat-value" id="statHoras">—</div>
+      </div>
+    </div>
+
+    <!-- AÇÕES -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Ações</div>
+      </div>
+      <div class="actions-grid">
+
+        <!-- Excel -->
+        <div class="action-card">
+          <div class="tag">EXPORTAR EXCEL</div>
+          <h3>Baixar Relatório</h3>
+          <div class="controls">
+            <select id="excelTipo">
+              <option value="pernoites">Pernoites</option>
+              <option value="vale-descarga">Vale de Descarga</option>
+              <option value="horas-extras">Horas Extras</option>
+            </select>
+            <input type="date" id="excelDi" placeholder="Data início"/>
+            <input type="date" id="excelDf" placeholder="Data fim"/>
+            <button class="btn-action accent" onclick="baixarExcel()">Baixar Excel</button>
+          </div>
+        </div>
+
+        <!-- PDF -->
+        <div class="action-card">
+          <div class="tag">GERAR PDF</div>
+          <h3>Holerite PDF</h3>
+          <div class="controls">
+            <select id="pdfTipo">
+              <option value="pernoites">Pernoites</option>
+              <option value="vale-descarga">Vale de Descarga</option>
+              <option value="horas-extras">Horas Extras</option>
+            </select>
+            <input type="text" id="pdfColaborador" placeholder="Nome do colaborador" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;width:100%"/>
+            <input type="number" id="pdfAno" placeholder="Ano (ex: 2026)" min="2024" max="2099"/>
+            <select id="pdfMes">
+              <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+              <option value="3">Março</option><option value="4">Abril</option>
+              <option value="5">Maio</option><option value="6">Junho</option>
+              <option value="7">Julho</option><option value="8">Agosto</option>
+              <option value="9">Setembro</option><option value="10">Outubro</option>
+              <option value="11">Novembro</option><option value="12">Dezembro</option>
+            </select>
+            <button class="btn-action accent" onclick="baixarPdf()">Gerar PDF</button>
+          </div>
+        </div>
+
+        <!-- Envio Manual -->
+        <div class="action-card">
+          <div class="tag">ENVIO MANUAL</div>
+          <h3>Disparar Holerites</h3>
+          <div class="controls">
+            <button class="btn-action danger" onclick="dispararEnvio('pernoites')">
+              Enviar Pernoites
+            </button>
+            <button class="btn-action danger" onclick="dispararEnvio('vale-descarga')">
+              Enviar Vale Descarga
+            </button>
+            <button class="btn-action danger" onclick="dispararEnvio('horas-extras')">
+              Enviar Horas Extras
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- REGISTROS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Registros</div>
+      </div>
+      <div class="table-wrap">
+        <div class="filters">
+          <input type="text" id="filtroNome" placeholder="Buscar colaborador..."/>
+          <input type="date" id="filtroDi"/>
+          <input type="date" id="filtroDf"/>
+          <button class="btn-filter" onclick="carregarRegistros()">Filtrar</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Data</th>
+              <th>Colaborador</th>
+              <th>Função</th>
+              <th>Entrada</th>
+              <th>Saída</th>
+              <th>H. Extras</th>
+              <th>Placa</th>
+              <th>Romaneio</th>
+              <th>Cidade/UF</th>
+              <th>Pernoite</th>
+              <th>Vale</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaRegistros">
+            <tr><td colspan="12" class="empty-state">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  let TOKEN = localStorage.getItem('adminToken') || '';
+
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = type;
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 4000);
+  }
+
+  async function doLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user, pass })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      TOKEN = json.token;
+      localStorage.setItem('adminToken', TOKEN);
+      mostrarDashboard();
+    } catch (err) {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  }
+
+  function doLogout() {
+    localStorage.removeItem('adminToken');
+    TOKEN = '';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+
+  function mostrarDashboard() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    carregarStats();
+    carregarRegistros();
+    // Preenche ano e mês atual no PDF
+    const agora = new Date();
+    document.getElementById('pdfAno').value = agora.getFullYear();
+    document.getElementById('pdfMes').value = agora.getMonth() + 1;
+  }
+
+  async function carregarStats() {
+    try {
+      const res = await fetch('/api/admin/stats', { headers: { 'x-admin-token': TOKEN } });
+      const data = await res.json();
+      document.getElementById('statTotal').textContent    = data.total;
+      document.getElementById('statPernoites').textContent = data.pernoites;
+      document.getElementById('statVales').textContent    = data.vales;
+      document.getElementById('statHoras').textContent    = data.horasExtras;
+    } catch(e) {}
+  }
+
+  async function carregarRegistros() {
+    const nome = document.getElementById('filtroNome').value.trim();
+    const di   = document.getElementById('filtroDi').value;
+    const df   = document.getElementById('filtroDf').value;
+    const params = new URLSearchParams();
+    if (nome) params.set('colaborador', nome);
+    if (di)   params.set('dataInicio', di);
+    if (df)   params.set('dataFim', df);
+
+    const tbody = document.getElementById('tabelaRegistros');
+    tbody.innerHTML = `<tr><td colspan="12" class="empty-state">Carregando...</td></tr>`;
+
+    try {
+      const res  = await fetch(`/api/admin/registros?${params}`, { headers: { 'x-admin-token': TOKEN } });
+      const rows = await res.json();
+
+      if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="12" class="empty-state">Nenhum registro encontrado.</td></tr>`;
+        return;
+      }
+
+      function minToHHMM(min) {
+        if (!min) return '—';
+        return `${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`;
+      }
+
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td style="color:var(--muted)">${r.id}</td>
+          <td>${r.data_registro}</td>
+          <td style="color:var(--text);font-weight:600">${r.nome_colaborador}</td>
+          <td><span class="badge ${r.funcao === 'motorista' ? 'badge-motor' : 'badge-ajud'}">${r.funcao}</span></td>
+          <td>${r.hora_entrada}</td>
+          <td>${r.hora_saida}</td>
+          <td style="color:${r.horas_extras_min > 0 ? 'var(--accent)' : 'var(--muted)'}">${minToHHMM(r.horas_extras_min)}</td>
+          <td>${r.placa}</td>
+          <td>${r.romaneio}</td>
+          <td>${r.cidade}/${r.uf}</td>
+          <td><span class="badge ${r.pernoite ? 'badge-yes' : 'badge-no'}">${r.pernoite ? 'SIM' : 'NÃO'}</span></td>
+          <td><span class="badge ${r.vale_descarga ? 'badge-yes' : 'badge-no'}">${r.vale_descarga ? 'SIM' : 'NÃO'}</span></td>
+        </tr>
+      `).join('');
+    } catch(e) {
+      tbody.innerHTML = `<tr><td colspan="12" class="empty-state">Erro ao carregar registros.</td></tr>`;
+    }
+  }
+
+  async function baixarExcel() {
+    const tipo = document.getElementById('excelTipo').value;
+    const di   = document.getElementById('excelDi').value;
+    const df   = document.getElementById('excelDf').value;
+    try {
+      const res = await fetch('/api/exportar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
+        body: JSON.stringify({ tipo, dataInicio: di || undefined, dataFim: df || undefined })
+      });
+      if (!res.ok) throw new Error('Falha ao exportar.');
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = `relatorio_${tipo}.xlsx`; a.click();
+      URL.revokeObjectURL(url);
+      showToast('Excel baixado com sucesso!');
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  async function baixarPdf() {
+    const tipo        = document.getElementById('pdfTipo').value;
+    const colaborador = document.getElementById('pdfColaborador').value.trim();
+    const ano         = document.getElementById('pdfAno').value;
+    const mes         = document.getElementById('pdfMes').value;
+    if (!colaborador) { showToast('Informe o nome do colaborador.', 'error'); return; }
+    try {
+      const res = await fetch('/api/gerar-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
+        body: JSON.stringify({ tipo, colaborador, ano: parseInt(ano), mes: parseInt(mes) })
+      });
+      if (!res.ok) throw new Error('Falha ao gerar PDF.');
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = `holerite_${tipo}_${colaborador.replace(/\s+/g,'_')}.pdf`; a.click();
+      URL.revokeObjectURL(url);
+      showToast('PDF gerado com sucesso!');
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  async function dispararEnvio(tipo) {
+    if (!confirm(`Confirma o envio de ${tipo} agora?`)) return;
+    try {
+      showToast('Enviando... aguarde.', 'success');
+      const res  = await fetch('/api/testar-envio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
+        body: JSON.stringify({ tipo })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      showToast(`✓ ${json.mensagem}`);
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  // Entra/sai pelo Enter no login
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') doLogin();
+  });
+
+  // Verifica se já tem token salvo
+  if (TOKEN) mostrarDashboard();
+</script>
+</body>
+</html>
