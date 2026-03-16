@@ -120,6 +120,19 @@ app.post('/api/registro', async (req, res) => {
       return res.status(400).json({ error: 'Campos obrigatórios ausentes.' });
     }
 
+    // Verifica duplicidade
+    const duplicado = db.prepare(`
+      SELECT id FROM registro
+      WHERE nome_colaborador = @nome AND data_registro = @data AND romaneio = @romaneio
+    `).get({ nome: nome_colaborador, data: data_registro, romaneio: String(b.romaneio || '').trim() });
+
+    if (duplicado && !bool(b.confirmar_duplicado)) {
+      return res.status(409).json({
+        duplicado: true,
+        warning: `Já existe um registro para ${nome_colaborador} na data ${data_registro} com o romaneio ${String(b.romaneio || '').trim()}. Deseja enviar mesmo assim?`
+      });
+    }
+
     const placaOnly = extractOnlyPlate(String(b.placa || ''));
     if (!placaOnly) return res.status(400).json({ error: 'Selecione o veículo/placa.' });
 
@@ -438,6 +451,112 @@ app.post('/api/gerar-pdf', async (req, res) => {
   }
 });
 
+// ===================== Auth =====================
+
+const { hashSenha, verificarSenha, gerarToken, verificarToken, authColaborador, authAdmin } = require('./auth');
+
+// Login do colaborador
+app.post('/api/auth/login', async (req, res) => {
+  const db = req.app.locals.db;
+  try {
+    const { username, senha } = req.body || {};
+    if (!username || !senha) return res.status(400).json({ error: 'Informe usuário e senha.' });
+
+    const colab = db.prepare(`SELECT * FROM colaboradores WHERE username = ? AND ativo = 1`).get(username);
+    if (!colab) return res.status(401).json({ error: 'Usuário ou senha inválidos.' });
+
+    const ok = await verificarSenha(senha, colab.senha_hash);
+    if (!ok) return res.status(401).json({ error: 'Usuário ou senha inválidos.' });
+
+    const token = gerarToken({ id: colab.id, username: colab.username, nome: colab.nome_completo, role: 'colaborador' });
+    res.json({ ok: true, token, nome: colab.nome_completo, username: colab.username, funcao: colab.funcao });
+  } catch (err) {
+    console.error('[AUTH] Erro no login:', err);
+    res.status(500).json({ error: 'Falha no login.' });
+  }
+});
+
+// Troca de senha do colaborador
+app.post('/api/auth/trocar-senha', authColaborador, async (req, res) => {
+  const db = req.app.locals.db;
+  try {
+    const { senhaAtual, novaSenha } = req.body || {};
+    if (!senhaAtual || !novaSenha) return res.status(400).json({ error: 'Informe a senha atual e a nova senha.' });
+    if (novaSenha.length < 6) return res.status(400).json({ error: 'A nova senha deve ter pelo menos 6 caracteres.' });
+
+    const colab = db.prepare(`SELECT * FROM colaboradores WHERE id = ?`).get(req.colaborador.id);
+    const ok = await verificarSenha(senhaAtual, colab.senha_hash);
+    if (!ok) return res.status(401).json({ error: 'Senha atual incorreta.' });
+
+    const novoHash = await hashSenha(novaSenha);
+    db.prepare(`UPDATE colaboradores SET senha_hash = ?, atualizado_em = datetime('now') WHERE id = ?`).run(novoHash, colab.id);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Falha ao trocar senha.' });
+  }
+});
+
+// ===================== Admin - Gerenciar Colaboradores =====================
+
+// Lista colaboradores
+app.get('/api/admin/colaboradores', adminAuth, (req, res) => {
+  const db = req.app.locals.db;
+  try {
+    const rows = db.prepare(`SELECT id, username, nome_completo, ativo, criado_em FROM colaboradores ORDER BY nome_completo ASC`).all();
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Falha ao listar colaboradores.' });
+  }
+});
+
+// Cadastra colaborador
+app.post('/api/admin/colaboradores', adminAuth, async (req, res) => {
+  const db = req.app.locals.db;
+  try {
+    const { username, senha, nome_completo, funcao } = req.body || {};
+    if (!username || !senha || !nome_completo) return res.status(400).json({ error: 'Informe username, senha e nome completo.' });
+
+    const funcaoValida = ['motorista', 'ajudante'].includes(funcao) ? funcao : 'motorista';
+
+    const existe = db.prepare(`SELECT id FROM colaboradores WHERE username = ?`).get(username);
+    if (existe) return res.status(400).json({ error: 'Username já cadastrado.' });
+
+    const senha_hash = await hashSenha(senha);
+    const result = db.prepare(`INSERT INTO colaboradores (username, senha_hash, nome_completo, funcao) VALUES (?, ?, ?, ?)`).run(username, senha_hash, nome_completo, funcaoValida);
+    res.status(201).json({ ok: true, id: result.lastInsertRowid });
+  } catch (err) {
+    res.status(500).json({ error: 'Falha ao cadastrar colaborador.' });
+  }
+});
+
+
+// Reseta senha do colaborador
+app.patch('/api/admin/colaboradores/:id/reset-senha', adminAuth, async (req, res) => {
+  const db = req.app.locals.db;
+  try {
+    const { novaSenha } = req.body || {};
+    if (!novaSenha) return res.status(400).json({ error: 'Informe a nova senha.' });
+
+    const hash = await hashSenha(novaSenha);
+    db.prepare(`UPDATE colaboradores SET senha_hash = ?, atualizado_em = datetime('now') WHERE id = ?`).run(hash, req.params.id);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Falha ao resetar senha.' });
+  }
+});
+
+// Ativa/desativa colaborador
+app.patch('/api/admin/colaboradores/:id/status', adminAuth, (req, res) => {
+  const db = req.app.locals.db;
+  try {
+    const { ativo } = req.body || {};
+    db.prepare(`UPDATE colaboradores SET ativo = ?, atualizado_em = datetime('now') WHERE id = ?`).run(ativo ? 1 : 0, req.params.id);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Falha ao atualizar status.' });
+  }
+});
+
 // ===================== Cron Jobs =====================
 const cron = require('node-cron');
 
@@ -563,19 +682,23 @@ cron.schedule('0 * * * *', () => {
 const ADMIN_USER = process.env.ADMIN_USER || 'admin';
 const ADMIN_PASS = process.env.ADMIN_PASS || 'mercam2024';
 
-app.post('/api/admin/login', (req, res) => {
+app.post('/api/admin/login', async (req, res) => {
   const { user, pass } = req.body || {};
   if (user === ADMIN_USER && pass === ADMIN_PASS) {
-    res.json({ ok: true, token: Buffer.from(`${user}:${pass}`).toString('base64') });
+    const token = gerarToken({ role: 'admin', user });
+    res.json({ ok: true, token });
   } else {
     res.status(401).json({ error: 'Credenciais inválidas.' });
   }
 });
 
 function adminAuth(req, res, next) {
-  const auth = req.headers['x-admin-token'];
-  const expected = Buffer.from(`${ADMIN_USER}:${ADMIN_PASS}`).toString('base64');
-  if (auth !== expected) return res.status(401).json({ error: 'Não autorizado.' });
+  const token = req.headers['x-admin-token'] || req.headers['x-auth-token'];
+  if (!token) return res.status(401).json({ error: 'Não autenticado.' });
+  const payload = verificarToken(token);
+  if (!payload || payload.role !== 'admin') {
+    return res.status(401).json({ error: 'Token inválido.' });
+  }
   next();
 }
 

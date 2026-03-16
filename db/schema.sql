@@ -99,3 +99,20 @@ CREATE TABLE IF NOT EXISTS email_queue (
 );
 
 CREATE INDEX IF NOT EXISTS idx_queue_status ON email_queue (status);
+
+-- =========================================
+-- TABELA DE COLABORADORES (login)
+-- =========================================
+
+CREATE TABLE IF NOT EXISTS colaboradores (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  username      TEXT NOT NULL UNIQUE,        -- ex: bruno.meira
+  senha_hash    TEXT NOT NULL,               -- bcrypt
+  nome_completo TEXT NOT NULL,               -- ex: Bruno da Silva Meira
+  funcao        TEXT NOT NULL DEFAULT 'motorista' CHECK(funcao IN ('motorista','ajudante')),
+  ativo         INTEGER NOT NULL DEFAULT 1,  -- 0 = desativado
+  criado_em     TEXT NOT NULL DEFAULT (datetime('now')),
+  atualizado_em TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_colaboradores_username ON colaboradores (username);

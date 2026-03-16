@@ -5,19 +5,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mercam - Controle de Horários</title>
   <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
+<!-- TELA DE LOGIN -->
+<div id="loginScreen" style="display:flex; align-items:center; justify-content:center; min-height:100vh; background:#0a0a0a;">
+  <div style="width:100%; max-width:360px; padding:24px;">
+    <div style="text-align:center; margin-bottom:32px;">
+      <div style="font-family:'Syne', sans-serif; font-size:28px; font-weight:800; letter-spacing:0.12em; color:#f0f0f0; margin-bottom:8px;">MERCAM</div>
+      <p style="color:#888; font-size:11px; letter-spacing:0.2em; font-family:'Syne', sans-serif;">CONTROLE DE HORÁRIOS</p>
+    </div>
+    <div style="background:#1a1a1a; border:1px solid #2a2a2a; padding:28px; border-radius:4px; position:relative;">
+      <div style="position:absolute; top:0; left:0; width:40px; height:2px; background:#e8ff00;"></div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Usuário</label>
+        <input id="loginUsername" type="text" placeholder="ex: bruno.meira" autocomplete="username"
+          style="width:100%; background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
+          onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+      </div>
+      <div style="margin-bottom:20px;">
+        <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Senha</label>
+        <input id="loginSenha" type="password" placeholder="••••••••" autocomplete="current-password"
+          style="width:100%; background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
+          onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+      </div>
+      <button onclick="fazerLogin()"
+        style="width:100%; background:#e8ff00; color:#000; border:none; padding:13px; font-weight:700; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:2px;">
+        ENTRAR
+      </button>
+      <div id="loginErro" style="display:none; margin-top:12px; color:#ff3b3b; font-size:12px; font-family:monospace; text-align:center;"></div>
+    </div>
+    <p style="text-align:center; margin-top:16px; font-size:11px; color:#444; font-family:monospace;">
+      Problemas para acessar? Fale com o seu gestor.
+    </p>
+  </div>
+</div>
+
+<!-- TELA DE TROCA DE SENHA -->
+<div id="trocaSenhaScreen" style="display:none; align-items:center; justify-content:center; min-height:100vh; background:#0a0a0a;">
+  <div style="width:100%; max-width:360px; padding:24px;">
+    <div style="text-align:center; margin-bottom:32px;">
+      <div style="font-family:'Syne', sans-serif; font-size:28px; font-weight:800; letter-spacing:0.12em; color:#f0f0f0; margin-bottom:8px;">MERCAM</div>
+      <p style="color:#888; font-size:11px; letter-spacing:0.2em; font-family:'Syne', sans-serif;">CONTROLE DE HORÁRIOS</p>
+    </div>
+    <div style="background:#1a1a1a; border:1px solid #2a2a2a; padding:28px; border-radius:4px; position:relative;">
+      <div style="position:absolute; top:0; left:0; width:40px; height:2px; background:#e8ff00;"></div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Senha Atual</label>
+        <input id="senhaAtual" type="password" placeholder="••••••••"
+          style="width:100%; background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
+          onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Nova Senha</label>
+        <input id="novaSenha" type="password" placeholder="••••••••"
+          style="width:100%; background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
+          onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+      </div>
+      <div style="margin-bottom:20px;">
+        <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Confirmar Nova Senha</label>
+        <input id="confirmarSenha" type="password" placeholder="••••••••"
+          style="width:100%; background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
+          onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+      </div>
+      <button onclick="trocarSenha()"
+        style="width:100%; background:#e8ff00; color:#000; border:none; padding:13px; font-weight:700; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:2px; margin-bottom:10px;">
+        SALVAR NOVA SENHA
+      </button>
+      <button onclick="voltarLogin()"
+        style="width:100%; background:transparent; color:#666; border:1px solid #2a2a2a; padding:11px; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; border-radius:2px;">
+        CANCELAR
+      </button>
+      <div id="trocaErro"    style="display:none; margin-top:12px; color:#ff3b3b; font-size:12px; font-family:monospace; text-align:center;"></div>
+      <div id="trocaSucesso" style="display:none; margin-top:12px; color:#00ff88; font-size:12px; font-family:monospace; text-align:center;"></div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
+  <div id="userBar" style="display:none; justify-content:space-between; align-items:center; margin-bottom:16px; padding:10px 14px; background:#1a1a1a; border:1px solid #2a2a2a; border-radius:4px;">
+    <div>
+      <div id="userNome" style="font-size:13px; color:#f0f0f0; font-family:monospace;"></div>
+      <div id="userFuncao" style="font-size:10px; color:#666; font-family:monospace; letter-spacing:0.1em; text-transform:uppercase; margin-top:2px;"></div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button onclick="mostrarTrocaSenha()"
+        style="background:transparent; border:1px solid #2a2a2a; color:#888; padding:5px 12px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:monospace;">
+        Trocar Senha
+      </button>
+      <button onclick="fazerLogout()"
+        style="background:transparent; border:1px solid #2a2a2a; color:#888; padding:5px 12px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:monospace;">
+        Sair
+      </button>
+    </div>
+  </div>
+
   <div class="logo-area">
-    <img src="assets/logo-mercam2021.png" alt="Mercam">
-    <h2>Controle de Horários</h2>
+    <div style="font-family:'Syne', sans-serif; font-size:26px; font-weight:800; letter-spacing:0.12em; color:#f0f0f0;">MERCAM</div>
+    <div style="font-family:'Syne', sans-serif; font-size:11px; letter-spacing:0.2em; color:#666; text-transform:uppercase; margin-top:4px;">Controle de Horários</div>
   </div>
 
   <form id="formPernoite" novalidate>
-    <!-- PASSO 1: IDENTIFICAÇÃO -->
-    <label for="funcao">Você é: *</label>
-    <select id="funcao" name="funcao_usuario" required>
+    <select id="funcao" name="funcao_usuario" required style="display:none;">
       <option value="">Selecione sua função</option>
       <option value="motorista">Motorista</option>
       <option value="ajudante">Ajudante</option>
@@ -25,32 +115,31 @@
 
     <hr>
 
-    <!-- TUDO A PARTIR DAQUI COMEÇA OCULTO -->
     <div id="resto" hidden>
       <!-- ÁREA DO MOTORISTA -->
       <div id="areaMotorista" class="hidden-section" aria-hidden="true">
         <label for="nomeMotorista">Nome do Motorista *</label>
         <select id="nomeMotorista" name="nome_motorista" data-required disabled>
-            <option value="">Selecione o motorista</option>
-            <option>Alexandro Aymore de Oliveira Santos</option>
-            <option>Alvaro Aparecido de Oliveira Benedito</option>
-            <option>Bruno da Silva Meira</option>
-            <option>Cleiton Gonzaga de Queiroga</option>
-            <option>Eder Antonio Henrique</option>
-            <option>Jean Carlos Rodrigues do Nascimento</option>
-            <option>Jonas Santana dos Santos</option>
-            <option>Jose Clayton da Silva Rodrigues</option>
-            <option>Jose Crispin Vieira de Araujo</option>
-            <option>Leandro Caraciolo dos Santos</option>
-            <option>Lucas Guedes da Silva</option>
-            <option>Nelson José Teixeira Miranda</option>
-            <option>Wagner da Silva Peres Amaral</option>
-            <option>Wilson de Souza</option>
+          <option value="">Selecione o motorista</option>
+          <option>Alexandro Aymore de Oliveira Santos</option>
+          <option>Alvaro Aparecido de Oliveira Benedito</option>
+          <option>Bruno da Silva Meira</option>
+          <option>Cleiton Gonzaga de Queiroga</option>
+          <option>Eder Antonio Henrique</option>
+          <option>Jean Carlos Rodrigues do Nascimento</option>
+          <option>Jonas Santana dos Santos</option>
+          <option>Jose Clayton da Silva Rodrigues</option>
+          <option>Jose Crispin Vieira de Araujo</option>
+          <option>Leandro Caraciolo dos Santos</option>
+          <option>Lucas Guedes da Silva</option>
+          <option>Nelson José Teixeira Miranda</option>
+          <option>Wagner da Silva Peres Amaral</option>
+          <option>Wilson de Souza</option>
         </select>
 
         <label for="temAjudante">Estava com ajudante?</label>
         <select id="temAjudante" name="tem_ajudante" disabled>
-          <option value="">Selecione...</option> <!-- placeholder obrigatório -->
+          <option value="">Selecione...</option>
           <option value="nao">Não</option>
           <option value="sim">Sim</option>
         </select>
@@ -110,7 +199,6 @@
 
       <hr>
 
-      <!-- DEMAIS CAMPOS GERAIS -->
       <label for="emailColab">Digite seu email</label>
       <input id="emailColab" type="email" name="email" data-required disabled>
 
@@ -122,14 +210,12 @@
           <label for="horaEntrada">Hora de Entrada *</label>
           <input id="horaEntrada" type="time" name="hora_entrada" data-required disabled>
         </div>
-
         <div>
           <label for="horaSaida">Hora de Saída *</label>
           <input id="horaSaida" type="time" name="hora_saida" data-required disabled>
         </div>
       </div>
 
-      <!-- ✅ VEÍCULO / PLACA (ACIMA DO ROMANEIO) -->
       <div id="blocoPlaca" class="hidden-section" aria-hidden="true" hidden>
         <label for="placaSelect">Veículo / Placa *</label>
         <select id="placaSelect" name="placa" disabled required>
@@ -204,7 +290,6 @@
 
       <hr>
 
-      <!-- CHECKBOXES (custom) -->
       <div class="checkbox-row">
         <input type="checkbox" id="pernoite" name="pernoite" class="custom-check" disabled>
         <label for="pernoite">Houve Pernoite?</label>
@@ -218,6 +303,26 @@
       <button type="submit" disabled>Enviar Registro</button>
     </div>
   </form>
+</div>
+
+<!-- MODAL DUPLICIDADE -->
+<div id="modalDuplicidade" style="display:none; position:fixed; inset:0; background:#000000cc; z-index:9999; align-items:center; justify-content:center; padding:20px;">
+  <div style="background:#1a1a1a; border:1px solid #2a2a2a; padding:28px; width:100%; max-width:380px; border-radius:4px; position:relative;">
+    <div style="position:absolute; top:0; left:0; width:40px; height:2px; background:#e8ff00;"></div>
+    <div style="font-size:20px; margin-bottom:12px;">⚠️</div>
+    <h3 style="font-family:'Syne',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px; color:#f0f0f0;">Registro Duplicado</h3>
+    <p id="modalDuplicidadeMsg" style="font-size:13px; color:#888; line-height:1.6; margin-bottom:24px; font-family:monospace;"></p>
+    <div style="display:flex; gap:10px;">
+      <button id="modalDuplicidadeConfirmar"
+        style="flex:1; background:#e8ff00; color:#000; border:none; padding:12px; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; border-radius:2px;">
+        Enviar Mesmo Assim
+      </button>
+      <button id="modalDuplicidadeCancelar"
+        style="flex:1; background:transparent; color:#888; border:1px solid #2a2a2a; padding:12px; font-family:'Syne',sans-serif; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; border-radius:2px;">
+        Cancelar
+      </button>
+    </div>
+  </div>
 </div>
 
 <script src="script.js"></script>

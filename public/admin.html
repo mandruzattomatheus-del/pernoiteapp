@@ -514,6 +514,94 @@
       </div>
     </div>
 
+    <!-- COLABORADORES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">Colaboradores</div>
+    <button class="btn-action accent" style="width:auto; padding:8px 20px;" onclick="mostrarModalNovoColab()">+ Novo Colaborador</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Username</th>
+          <th>Nome Completo</th>
+          <th>Status</th>
+          <th>Cadastrado em</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaColaboradores">
+        <tr><td colspan="6" class="empty-state">Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL NOVO COLABORADOR -->
+
+<div style="margin-bottom:14px;">
+  <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Função</label>
+  <select id="colabFuncao"
+    style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;">
+    <option value="motorista">Motorista</option>
+    <option value="ajudante">Ajudante</option>
+  </select>
+</div>
+
+<div id="modalColab" style="display:none; position:fixed; inset:0; background:#000000cc; z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:#111; border:1px solid #2a2a2a; padding:32px; width:100%; max-width:420px; position:relative;">
+    <div style="position:absolute; top:0; left:0; width:40px; height:2px; background:var(--accent);"></div>
+    <h3 style="font-size:13px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:24px;">Novo Colaborador</h3>
+
+    <div style="margin-bottom:14px;">
+      <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Nome Completo</label>
+      <input id="colabNome" type="text" placeholder="Bruno da Silva Meira"
+        style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;"/>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Username</label>
+      <input id="colabUsername" type="text" placeholder="bruno.meira"
+        style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;"/>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Senha Inicial</label>
+      <input id="colabSenha" type="text" placeholder="ex: 01011990"
+        style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;"/>
+    </div>
+
+    <div style="display:flex; gap:10px;">
+      <button class="btn-action accent" style="flex:1;" onclick="cadastrarColab()">Cadastrar</button>
+      <button class="btn-action" style="flex:1;" onclick="fecharModalColab()">Cancelar</button>
+    </div>
+    <div id="colabErro" style="display:none; margin-top:12px; color:var(--danger); font-size:12px; font-family:'JetBrains Mono',monospace;"></div>
+  </div>
+</div>
+
+<!-- MODAL RESET SENHA -->
+<div id="modalReset" style="display:none; position:fixed; inset:0; background:#000000cc; z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:#111; border:1px solid #2a2a2a; padding:32px; width:100%; max-width:380px; position:relative;">
+    <div style="position:absolute; top:0; left:0; width:40px; height:2px; background:var(--accent);"></div>
+    <h3 style="font-size:13px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">Resetar Senha</h3>
+    <p id="resetNome" style="font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:20px;"></p>
+
+    <div style="margin-bottom:24px;">
+      <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Nova Senha</label>
+      <input id="resetSenha" type="text" placeholder="Nova senha"
+        style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;"/>
+    </div>
+
+    <div style="display:flex; gap:10px;">
+      <button class="btn-action accent" style="flex:1;" onclick="confirmarReset()">Confirmar</button>
+      <button class="btn-action" style="flex:1;" onclick="fecharModalReset()">Cancelar</button>
+    </div>
+    <div id="resetErro" style="display:none; margin-top:12px; color:var(--danger); font-size:12px; font-family:'JetBrains Mono',monospace;"></div>
+  </div>
+</div>
+
     <!-- REGISTROS -->
     <div class="section">
       <div class="section-header">
@@ -597,6 +685,7 @@
     document.getElementById('dashboard').style.display = 'block';
     carregarStats();
     carregarRegistros();
+    carregarColaboradores();
     // Preenche ano e mês atual no PDF
     const agora = new Date();
     document.getElementById('pdfAno').value = agora.getFullYear();
@@ -722,6 +811,144 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') doLogin();
   });
+
+  // ===== Colaboradores =====
+let resetColabId = null;
+
+async function carregarColaboradores() {
+  const tbody = document.getElementById('tabelaColaboradores');
+  tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Carregando...</td></tr>`;
+  try {
+    const res  = await fetch('/api/admin/colaboradores', { headers: { 'x-admin-token': TOKEN } });
+    const rows = await res.json();
+
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Nenhum colaborador cadastrado.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = rows.map(c => `
+      <tr>
+        <td style="color:var(--muted)">${c.id}</td>
+        <td style="color:var(--accent)">${c.username}</td>
+        <td style="font-weight:600">${c.nome_completo}</td>
+        <td>
+          <span class="badge ${c.ativo ? 'badge-yes' : 'badge-no'}">${c.ativo ? 'ATIVO' : 'INATIVO'}</span>
+        </td>
+        <td>${c.criado_em.slice(0,10)}</td>
+        <td style="display:flex; gap:6px;">
+          <button class="btn-action" style="padding:4px 10px; font-size:10px;"
+            onclick="abrirModalReset(${c.id}, '${c.nome_completo}')">Reset Senha</button>
+          <button class="btn-action ${c.ativo ? 'danger' : ''}" style="padding:4px 10px; font-size:10px;"
+            onclick="toggleStatus(${c.id}, ${c.ativo})">
+            ${c.ativo ? 'Desativar' : 'Ativar'}
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Erro ao carregar.</td></tr>`;
+  }
+}
+
+function mostrarModalNovoColab() {
+  document.getElementById('colabNome').value = '';
+  document.getElementById('colabUsername').value = '';
+  document.getElementById('colabSenha').value = '';
+  document.getElementById('colabErro').style.display = 'none';
+  document.getElementById('modalColab').style.display = 'flex';
+}
+function fecharModalColab() {
+  document.getElementById('modalColab').style.display = 'none';
+}
+
+async function cadastrarColab() {
+  const nome     = document.getElementById('colabNome').value.trim();
+  const username = document.getElementById('colabUsername').value.trim();
+  const senha    = document.getElementById('colabSenha').value.trim();
+  const funcao   = document.getElementById('colabFuncao').value;
+  const erroEl   = document.getElementById('colabErro');
+  erroEl.style.display = 'none';
+
+  if (!nome || !username || !senha) {
+    erroEl.textContent = 'Preencha todos os campos.';
+    erroEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res  = await fetch('/api/admin/colaboradores', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
+      body: JSON.stringify({ nome_completo: nome, username, senha, funcao })
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error);
+
+    fecharModalColab();
+    carregarColaboradores();
+    showToast(`✓ Colaborador ${nome} cadastrado!`);
+  } catch(e) {
+    erroEl.textContent = e.message;
+    erroEl.style.display = 'block';
+  }
+}
+
+function abrirModalReset(id, nome) {
+  resetColabId = id;
+  document.getElementById('resetNome').textContent = nome;
+  document.getElementById('resetSenha').value = '';
+  document.getElementById('resetErro').style.display = 'none';
+  document.getElementById('modalReset').style.display = 'flex';
+}
+function fecharModalReset() {
+  document.getElementById('modalReset').style.display = 'none';
+}
+
+async function confirmarReset() {
+  const novaSenha = document.getElementById('resetSenha').value.trim();
+  const erroEl    = document.getElementById('resetErro');
+  erroEl.style.display = 'none';
+
+  if (!novaSenha) {
+    erroEl.textContent = 'Informe a nova senha.';
+    erroEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res  = await fetch(`/api/admin/colaboradores/${resetColabId}/reset-senha`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
+      body: JSON.stringify({ novaSenha })
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error);
+
+    fecharModalReset();
+    showToast('✓ Senha resetada com sucesso!');
+  } catch(e) {
+    erroEl.textContent = e.message;
+    erroEl.style.display = 'block';
+  }
+}
+
+async function toggleStatus(id, ativoAtual) {
+  try {
+    const res  = await fetch(`/api/admin/colaboradores/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
+      body: JSON.stringify({ ativo: !ativoAtual })
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error);
+
+    carregarColaboradores();
+    showToast(`✓ Status atualizado!`);
+  } catch(e) {
+    showToast(e.message, 'error');
+  }
+}
 
   // Verifica se já tem token salvo
   if (TOKEN) mostrarDashboard();

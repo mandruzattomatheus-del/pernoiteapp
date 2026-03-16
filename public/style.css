@@ -3,7 +3,7 @@
 
 body {
   font-family: "Inter","Segoe UI",sans-serif;
-  background: linear-gradient(180deg, #0f172a, #020617);
+  background: #0a0a0a;
   color: #e5e7eb;
   min-height: 100vh;
   display: flex;
@@ -43,7 +43,7 @@ input, select, textarea {
   padding: 12px;
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.08);
-  background: #020617;
+  background: #0a0a0a;
   color: #e5e7eb;
   font-size: 14px;
   margin-bottom: 16px;
@@ -148,7 +148,7 @@ button {
   height: 18px;
   margin: 0;
   border: 1px solid #24324a;
-  background: #0f1623;
+  background: #111111;
   border-radius: 4px;
 
   display: grid;
