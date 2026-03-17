@@ -1,3 +1,14 @@
+function toggleSenha(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁';
+  }
+}
+
 // ===== Autenticação =====
 const AUTH_KEY   = 'colabToken';
 const AUTH_NOME  = 'colabNome';

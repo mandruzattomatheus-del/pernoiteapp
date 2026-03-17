@@ -6,6 +6,23 @@
   <title>Mercam - Controle de Horários</title>
   <link rel="stylesheet" href="style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    .senha-wrap { position: relative; }
+    .senha-wrap input { width: 100%; padding-right: 40px; }
+    .senha-wrap .btn-olho {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+      line-height: 1;
+    }
+  </style>
 </head>
 <body>
 
@@ -26,9 +43,12 @@
       </div>
       <div style="margin-bottom:20px;">
         <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Senha</label>
-        <input id="loginSenha" type="password" placeholder="••••••••" autocomplete="current-password"
-          style="width:100%; background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
-          onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+        <div class="senha-wrap">
+          <input id="loginSenha" type="password" placeholder="••••••••" autocomplete="current-password"
+            style="background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
+            onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+          <button type="button" class="btn-olho" onclick="toggleSenha('loginSenha', this)">👁</button>
+        </div>
       </div>
       <button onclick="fazerLogin()"
         style="width:100%; background:#e8ff00; color:#000; border:none; padding:13px; font-weight:700; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:2px;">
@@ -51,24 +71,37 @@
     </div>
     <div style="background:#1a1a1a; border:1px solid #2a2a2a; padding:28px; border-radius:4px; position:relative;">
       <div style="position:absolute; top:0; left:0; width:40px; height:2px; background:#e8ff00;"></div>
+
       <div style="margin-bottom:16px;">
         <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Senha Atual</label>
-        <input id="senhaAtual" type="password" placeholder="••••••••"
-          style="width:100%; background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
-          onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+        <div class="senha-wrap">
+          <input id="senhaAtual" type="password" placeholder="••••••••"
+            style="background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
+            onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+          <button type="button" class="btn-olho" onclick="toggleSenha('senhaAtual', this)">👁</button>
+        </div>
       </div>
+
       <div style="margin-bottom:16px;">
         <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Nova Senha</label>
-        <input id="novaSenha" type="password" placeholder="••••••••"
-          style="width:100%; background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
-          onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+        <div class="senha-wrap">
+          <input id="novaSenha" type="password" placeholder="••••••••"
+            style="background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
+            onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+          <button type="button" class="btn-olho" onclick="toggleSenha('novaSenha', this)">👁</button>
+        </div>
       </div>
+
       <div style="margin-bottom:20px;">
         <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Confirmar Nova Senha</label>
-        <input id="confirmarSenha" type="password" placeholder="••••••••"
-          style="width:100%; background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
-          onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+        <div class="senha-wrap">
+          <input id="confirmarSenha" type="password" placeholder="••••••••"
+            style="background:#111; border:1px solid #2a2a2a; color:#f0f0f0; padding:11px 14px; font-size:14px; outline:none; border-radius:2px; font-family:monospace;"
+            onfocus="this.style.borderColor='#e8ff00'" onblur="this.style.borderColor='#2a2a2a'"/>
+          <button type="button" class="btn-olho" onclick="toggleSenha('confirmarSenha', this)">👁</button>
+        </div>
       </div>
+
       <button onclick="trocarSenha()"
         style="width:100%; background:#e8ff00; color:#000; border:none; padding:13px; font-weight:700; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:2px; margin-bottom:10px;">
         SALVAR NOVA SENHA
@@ -116,7 +149,6 @@
     <hr>
 
     <div id="resto" hidden>
-      <!-- ÁREA DO MOTORISTA -->
       <div id="areaMotorista" class="hidden-section" aria-hidden="true">
         <label for="nomeMotorista">Nome do Motorista *</label>
         <select id="nomeMotorista" name="nome_motorista" data-required disabled>
@@ -161,7 +193,6 @@
         </div>
       </div>
 
-      <!-- ÁREA DO AJUDANTE -->
       <div id="areaAjudante" class="hidden-section" aria-hidden="true">
         <label for="nomeAjudante">Seu Nome (Ajudante) *</label>
         <select id="nomeAjudante" name="nome_ajudante" data-required disabled>
