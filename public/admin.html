@@ -6,395 +6,157 @@
   <title>Mercam — Painel Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
+
+      .cell-input {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text);
+      padding: 3px 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .cell-input:hover { border-color: var(--border); }
+    .cell-input:focus { border-color: var(--accent); background: var(--surface2); }
+    .cell-input[type="number"] { width: 70px; }
+
     :root {
-      --bg: #0a0a0a;
-      --surface: #111111;
-      --surface2: #1a1a1a;
-      --border: #2a2a2a;
-      --accent: #e8ff00;
-      --accent2: #ff6b35;
-      --text: #f0f0f0;
-      --muted: #666;
-      --success: #00ff88;
-      --danger: #ff3b3b;
+      --bg: #0a0a0a; --surface: #111111; --surface2: #1a1a1a;
+      --border: #2a2a2a; --accent: #e8ff00; --accent2: #ff6b35;
+      --text: #f0f0f0; --muted: #666; --success: #00ff88; --danger: #ff3b3b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Syne', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+    body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* ── LOGIN ── */
+    /* LOGIN */
     #loginScreen {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg);
-      position: relative;
-      overflow: hidden;
+      min-height: 100vh; display: flex; align-items: center;
+      justify-content: center; background: var(--bg); position: relative; overflow: hidden;
     }
     #loginScreen::before {
-      content: 'MERCAM';
-      position: absolute;
-      font-size: 20vw;
-      font-weight: 800;
-      color: #ffffff04;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      white-space: nowrap;
-      pointer-events: none;
+      content: 'MERCAM'; position: absolute; font-size: 20vw; font-weight: 800;
+      color: #ffffff04; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      white-space: nowrap; pointer-events: none;
     }
     .login-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 48px;
-      width: 100%;
-      max-width: 400px;
-      position: relative;
-      z-index: 1;
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 48px; width: 100%; max-width: 400px; position: relative; z-index: 1;
     }
     .login-box::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 60px; height: 3px;
-      background: var(--accent);
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 60px; height: 3px; background: var(--accent);
     }
-    .login-logo {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-    .login-sub {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 40px;
-      font-family: 'JetBrains Mono', monospace;
-    }
+    .login-logo { font-size: 22px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+    .login-sub { font-size: 12px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 40px; font-family: 'JetBrains Mono', monospace; }
     .field { margin-bottom: 20px; }
-    .field label {
-      display: block;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .field input {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 12px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
+    .field label { display: block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+    .field input { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 12px 16px; font-family: 'JetBrains Mono', monospace; font-size: 14px; outline: none; transition: border-color 0.2s; }
     .field input:focus { border-color: var(--accent); }
-    .btn-primary {
-      width: 100%;
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 14px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: opacity 0.2s;
-      margin-top: 8px;
-    }
+    .btn-primary { width: 100%; background: var(--accent); color: #000; border: none; padding: 14px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; margin-top: 8px; }
     .btn-primary:hover { opacity: 0.85; }
-    .login-error {
-      color: var(--danger);
-      font-size: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      margin-top: 12px;
-      display: none;
-    }
+    .login-error { color: var(--danger); font-size: 12px; font-family: 'JetBrains Mono', monospace; margin-top: 12px; display: none; }
 
-    /* ── DASHBOARD ── */
+    /* DASHBOARD */
     #dashboard { display: none; }
-
-    .topbar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .topbar-brand {
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .topbar-brand span {
-      color: var(--accent);
-      margin-left: 6px;
-      font-size: 11px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 400;
-    }
-    .btn-logout {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 8px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      cursor: pointer;
-      letter-spacing: 0.08em;
-      transition: all 0.2s;
-    }
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .topbar-brand { font-size: 16px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+    .topbar-brand span { color: var(--accent); margin-left: 6px; font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 400; }
+    .btn-logout { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; font-family: 'JetBrains Mono', monospace; font-size: 11px; cursor: pointer; letter-spacing: 0.08em; transition: all 0.2s; }
     .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
-
     .main { padding: 32px; max-width: 1400px; margin: 0 auto; }
 
-    /* ── STATS ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 24px;
-      position: relative;
-      overflow: hidden;
-    }
-    .stat-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0;
-      width: 100%; height: 2px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.4s ease;
-    }
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; position: relative; overflow: hidden; }
+    .stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
     .stat-card:hover::after { transform: scaleX(1); }
-    .stat-label {
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-      margin-bottom: 12px;
-    }
-    .stat-value {
-      font-size: 42px;
-      font-weight: 800;
-      line-height: 1;
-      color: var(--accent);
-    }
+    .stat-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 12px; }
+    .stat-value { font-size: 42px; font-weight: 800; line-height: 1; color: var(--accent); }
 
-    /* ── SEÇÕES ── */
+    /* SEÇÕES */
     .section { margin-bottom: 32px; }
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .section-title {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .section-title::before {
-      content: '//';
-      color: var(--accent);
-      margin-right: 8px;
-      font-family: 'JetBrains Mono', monospace;
-    }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .section-title { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .section-title::before { content: '//'; color: var(--accent); margin-right: 8px; font-family: 'JetBrains Mono', monospace; }
 
-    /* ── AÇÕES ── */
-    .actions-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+    /* ABAS */
+    .tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 1px solid var(--border); }
+    .tab-btn {
+      background: transparent; border: none; border-bottom: 2px solid transparent;
+      color: var(--muted); padding: 10px 20px; font-family: 'Syne', sans-serif;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.2s; margin-bottom: -1px;
     }
-    .action-card {
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* CONTROLES */
+    .relatorio-controls {
+      display: flex; gap: 12px; padding: 16px;
+      border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center;
       background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 24px;
     }
-    .action-card h3 {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      color: var(--text);
+    .relatorio-controls input[type="date"] {
+      background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+      padding: 8px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none;
     }
-    .action-card .tag {
-      display: inline-block;
-      font-size: 10px;
-      font-family: 'JetBrains Mono', monospace;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 2px 8px;
-      margin-bottom: 16px;
-    }
-    .controls { display: flex; flex-direction: column; gap: 10px; }
-    .controls select, .controls input[type="date"], .controls input[type="number"] {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 12px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      outline: none;
-      width: 100%;
-      transition: border-color 0.2s;
-    }
-    .controls select:focus, .controls input:focus { border-color: var(--accent); }
-    .controls select option { background: var(--surface2); }
+    .relatorio-controls input:focus { border-color: var(--accent); }
+
+    /* BOTÕES */
     .btn-action {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 16px;
-      font-family: 'Syne', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.2s;
-      width: 100%;
+      background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+      padding: 10px 16px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; width: 100%;
     }
     .btn-action:hover { border-color: var(--accent); color: var(--accent); }
     .btn-action.accent { background: var(--accent); color: #000; border-color: var(--accent); }
     .btn-action.accent:hover { opacity: 0.85; }
-    .btn-action.danger { border-color: var(--accent2); color: var(--accent2); }
-    .btn-action.danger:hover { background: var(--accent2); color: #000; }
+    .btn-action.danger { border-color: var(--danger); color: var(--danger); }
+    .btn-action.danger:hover { background: var(--danger); color: #000; }
+    .btn-filter { background: var(--accent); color: #000; border: none; padding: 8px 20px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
 
-    /* ── TABELA ── */
-    .table-wrap {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      overflow-x: auto;
+    /* PDF CARD */
+    .pdf-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; margin-bottom: 32px; }
+    .pdf-card h3 { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
+    .pdf-controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+    .pdf-controls select, .pdf-controls input {
+      background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+      padding: 10px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none;
     }
-    .filters {
-      display: flex;
-      gap: 12px;
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-    .filters input, .filters select {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 12px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
+    .pdf-controls select:focus, .pdf-controls input:focus { border-color: var(--accent); }
+    .pdf-controls .btn-action { width: auto; }
+
+    /* TABELA */
+    .table-wrap { background: var(--surface); border: 1px solid var(--border); overflow-x: auto; }
+    .filters { display: flex; gap: 12px; padding: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .filters input, .filters select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; transition: border-color 0.2s; }
     .filters input:focus, .filters select:focus { border-color: var(--accent); }
     .filters input[type="text"] { flex: 1; min-width: 180px; }
-    .btn-filter {
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 8px 20px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
     table { width: 100%; border-collapse: collapse; }
     thead tr { border-bottom: 1px solid var(--border); }
-    th {
-      padding: 12px 16px;
-      text-align: left;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-    td {
-      padding: 12px 16px;
-      font-size: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      border-bottom: 1px solid #1a1a1a;
-      white-space: nowrap;
-    }
+    th { padding: 12px 16px; text-align: left; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-weight: 500; white-space: nowrap; }
+    td { padding: 12px 16px; font-size: 12px; font-family: 'JetBrains Mono', monospace; border-bottom: 1px solid #1a1a1a; white-space: nowrap; }
     tbody tr { transition: background 0.15s; }
     tbody tr:hover { background: var(--surface2); }
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-    }
+    .badge { display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; }
     .badge-yes { background: #00ff8820; color: var(--success); border: 1px solid #00ff8840; }
-    .badge-no  { background: #ffffff08; color: var(--muted);   border: 1px solid var(--border); }
+    .badge-no  { background: #ffffff08; color: var(--muted); border: 1px solid var(--border); }
     .badge-motor { background: #e8ff0015; color: var(--accent); border: 1px solid #e8ff0030; }
     .badge-ajud  { background: #ff6b3515; color: var(--accent2); border: 1px solid #ff6b3530; }
-    .empty-state {
-      text-align: center;
-      padding: 48px;
-      color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-    }
+    .empty-state { text-align: center; padding: 48px; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
 
-    /* ── TOAST ── */
-    #toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      padding: 14px 20px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      z-index: 9999;
-      display: none;
-      border-left: 3px solid var(--accent);
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      max-width: 360px;
-    }
+    /* TOAST */
+    #toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; z-index: 9999; display: none; border-left: 3px solid var(--accent); background: var(--surface); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); max-width: 360px; }
     #toast.error { border-left-color: var(--danger); }
     #toast.success { border-left-color: var(--success); }
 
     @media (max-width: 900px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .actions-grid { grid-template-columns: 1fr; }
+      .pdf-controls { flex-direction: column; }
     }
   </style>
 </head>
@@ -447,132 +209,180 @@
       </div>
     </div>
 
-    <!-- AÇÕES -->
+    <!-- RELATÓRIOS COM ABAS -->
     <div class="section">
       <div class="section-header">
-        <div class="section-title">Ações</div>
+        <div class="section-title">Relatórios</div>
       </div>
-      <div class="actions-grid">
 
-        <!-- Excel -->
-        <div class="action-card">
-          <div class="tag">EXPORTAR EXCEL</div>
-          <h3>Baixar Relatório</h3>
-          <div class="controls">
-            <select id="excelTipo">
-              <option value="pernoites">Pernoites</option>
-              <option value="vale-descarga">Vale de Descarga</option>
-              <option value="horas-extras">Horas Extras</option>
-            </select>
-            <input type="date" id="excelDi" placeholder="Data início"/>
-            <input type="date" id="excelDf" placeholder="Data fim"/>
-            <button class="btn-action accent" onclick="baixarExcel()">Baixar Excel</button>
-          </div>
+      <!-- Filtro de período -->
+      <div class="relatorio-controls">
+        <input type="date" id="relDi"/>
+        <input type="date" id="relDf"/>
+        <button class="btn-filter" onclick="carregarRelatorio()">Filtrar</button>
+        <button class="btn-filter" style="background:var(--surface2); color:var(--text); border:1px solid var(--border);" onclick="baixarExcelAtual()">⬇ Excel</button>
+      </div>
+
+      <!-- Abas -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="mudarAba('pernoites', this)">Pernoites</button>
+        <button class="tab-btn" onclick="mudarAba('vale-descarga', this)">Vale Descarga</button>
+        <button class="tab-btn" onclick="mudarAba('horas-extras', this)">Horas Extras</button>
+      </div>
+
+      <!-- Painel Pernoites -->
+      <div id="tab-pernoites" class="tab-panel active">
+        <div class="table-wrap" style="border-top:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>Dia</th><th>Placa</th><th>Cidade</th><th>UF</th>
+                <th>Documento</th><th>Serviço</th><th>Colaborador</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyPernoites">
+              <tr><td colspan="7" class="empty-state">Selecione um período e clique em Filtrar.</td></tr>
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        <!-- PDF -->
-        <div class="action-card">
-          <div class="tag">GERAR PDF</div>
-          <h3>Holerite PDF</h3>
-          <div class="controls">
-            <select id="pdfTipo">
-              <option value="pernoites">Pernoites</option>
-              <option value="vale-descarga">Vale de Descarga</option>
-              <option value="horas-extras">Horas Extras</option>
-            </select>
-            <input type="text" id="pdfColaborador" placeholder="Nome do colaborador" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;width:100%"/>
-            <input type="number" id="pdfAno" placeholder="Ano (ex: 2026)" min="2024" max="2099"/>
-            <select id="pdfMes">
-              <option value="1">Janeiro</option><option value="2">Fevereiro</option>
-              <option value="3">Março</option><option value="4">Abril</option>
-              <option value="5">Maio</option><option value="6">Junho</option>
-              <option value="7">Julho</option><option value="8">Agosto</option>
-              <option value="9">Setembro</option><option value="10">Outubro</option>
-              <option value="11">Novembro</option><option value="12">Dezembro</option>
-            </select>
-            <button class="btn-action accent" onclick="baixarPdf()">Gerar PDF</button>
-          </div>
+      <!-- Painel Vale Descarga -->
+      <div id="tab-vale-descarga" class="tab-panel">
+        <div class="table-wrap" style="border-top:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>Dia</th><th>Placa</th><th>Cidade</th><th>UF</th>
+                <th>Documento</th><th>Serviço</th><th>Colaborador</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyValeDescarga">
+              <tr><td colspan="7" class="empty-state">Selecione um período e clique em Filtrar.</td></tr>
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        <!-- Envio Manual -->
-        <div class="action-card">
-          <div class="tag">ENVIO MANUAL</div>
-          <h3>Disparar Holerites</h3>
-          <div class="controls">
-            <button class="btn-action danger" onclick="dispararEnvio('pernoites')">
-              Enviar Pernoites
-            </button>
-            <button class="btn-action danger" onclick="dispararEnvio('vale-descarga')">
-              Enviar Vale Descarga
-            </button>
-            <button class="btn-action danger" onclick="dispararEnvio('horas-extras')">
-              Enviar Horas Extras
-            </button>
-          </div>
+      <!-- Painel Horas Extras -->
+      <div id="tab-horas-extras" class="tab-panel">
+        <div class="table-wrap" style="border-top:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>Dia</th><th>Entrada</th><th>Saída</th><th>Hora Extra</th>
+                <th>Romaneio/OC</th><th>Colaborador</th><th>Função</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyHorasExtras">
+              <tr><td colspan="7" class="empty-state">Selecione um período e clique em Filtrar.</td></tr>
+            </tbody>
+          </table>
         </div>
+      </div>
+    </div>
 
+    <!-- GERAR PDF -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Gerar Holerite PDF</div>
+      </div>
+      <div class="pdf-card">
+        <div class="pdf-controls">
+          <select id="pdfTipo">
+            <option value="pernoites">Pernoites</option>
+            <option value="vale-descarga">Vale de Descarga</option>
+            <option value="horas-extras">Horas Extras</option>
+          </select>
+          <select id="pdfColaborador" style="min-width:260px;">
+            <option value="">Selecione o colaborador...</option>
+          </select>
+          <input type="date" id="pdfDi" placeholder="Data início"/>
+          <input type="date" id="pdfDf" placeholder="Data fim"/>
+          <button class="btn-action accent" style="width:auto; padding:10px 24px;" onclick="baixarPdf()">Gerar PDF</button>
+        </div>
       </div>
     </div>
 
     <!-- COLABORADORES -->
-<div class="section">
-  <div class="section-header">
-    <div class="section-title">Colaboradores</div>
-    <button class="btn-action accent" style="width:auto; padding:8px 20px;" onclick="mostrarModalNovoColab()">+ Novo Colaborador</button>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Username</th>
-          <th>Nome Completo</th>
-          <th>Status</th>
-          <th>Cadastrado em</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaColaboradores">
-        <tr><td colspan="6" class="empty-state">Carregando...</td></tr>
-      </tbody>
-    </table>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Colaboradores</div>
+        <button class="btn-action accent" style="width:auto; padding:8px 20px;" onclick="mostrarModalNovoColab()">+ Novo Colaborador</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Username</th><th>Nome Completo</th>
+              <th>Função</th><th>Status</th><th>Cadastrado em</th><th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaColaboradores">
+            <tr><td colspan="7" class="empty-state">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- REGISTROS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Todos os Registros</div>
+      </div>
+      <div class="table-wrap">
+        <div class="filters">
+          <input type="text" id="filtroRomaneio" placeholder="Buscar por romaneio..."/>
+          <button class="btn-filter" onclick="carregarRegistros()">Filtrar</button>
+          <button class="btn-filter" style="background:var(--surface2); color:var(--muted); border:1px solid var(--border);" onclick="document.getElementById('filtroRomaneio').value=''; carregarRegistros()">Limpar</button>
+        </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Data</th><th>Colaborador</th><th>Função</th>
+              <th>Entrada</th><th>Saída</th><th>H. Extras</th><th>Placa</th>
+              <th>Romaneio</th><th>Cidade/UF</th><th>Pernoite</th><th>Vale</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaRegistros">
+            <tr><td colspan="12" class="empty-state">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <!-- MODAL NOVO COLABORADOR -->
-
-<div style="margin-bottom:14px;">
-  <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Função</label>
-  <select id="colabFuncao"
-    style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;">
-    <option value="motorista">Motorista</option>
-    <option value="ajudante">Ajudante</option>
-  </select>
-</div>
-
 <div id="modalColab" style="display:none; position:fixed; inset:0; background:#000000cc; z-index:1000; align-items:center; justify-content:center;">
   <div style="background:#111; border:1px solid #2a2a2a; padding:32px; width:100%; max-width:420px; position:relative;">
     <div style="position:absolute; top:0; left:0; width:40px; height:2px; background:var(--accent);"></div>
     <h3 style="font-size:13px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:24px;">Novo Colaborador</h3>
-
     <div style="margin-bottom:14px;">
       <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Nome Completo</label>
       <input id="colabNome" type="text" placeholder="Bruno da Silva Meira"
         style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;"/>
     </div>
-
     <div style="margin-bottom:14px;">
       <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Username</label>
       <input id="colabUsername" type="text" placeholder="bruno.meira"
         style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;"/>
     </div>
-
+    <div style="margin-bottom:14px;">
+      <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Função</label>
+      <select id="colabFuncao" style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;">
+        <option value="motorista">Motorista</option>
+        <option value="ajudante">Ajudante</option>
+      </select>
+    </div>
     <div style="margin-bottom:24px;">
       <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Senha Inicial</label>
-      <input id="colabSenha" type="text" placeholder="ex: 01011990"
+      <input id="colabSenha" type="text" placeholder="ex: Mudar@26"
         style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;"/>
     </div>
-
     <div style="display:flex; gap:10px;">
       <button class="btn-action accent" style="flex:1;" onclick="cadastrarColab()">Cadastrar</button>
       <button class="btn-action" style="flex:1;" onclick="fecharModalColab()">Cancelar</button>
@@ -587,13 +397,11 @@
     <div style="position:absolute; top:0; left:0; width:40px; height:2px; background:var(--accent);"></div>
     <h3 style="font-size:13px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">Resetar Senha</h3>
     <p id="resetNome" style="font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:20px;"></p>
-
     <div style="margin-bottom:24px;">
       <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Nova Senha</label>
       <input id="resetSenha" type="text" placeholder="Nova senha"
         style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;"/>
     </div>
-
     <div style="display:flex; gap:10px;">
       <button class="btn-action accent" style="flex:1;" onclick="confirmarReset()">Confirmar</button>
       <button class="btn-action" style="flex:1;" onclick="fecharModalReset()">Cancelar</button>
@@ -602,49 +410,11 @@
   </div>
 </div>
 
-    <!-- REGISTROS -->
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">Registros</div>
-      </div>
-      <div class="table-wrap">
-        <div class="filters">
-          <input type="text" id="filtroNome" placeholder="Buscar colaborador..."/>
-          <input type="date" id="filtroDi"/>
-          <input type="date" id="filtroDf"/>
-          <button class="btn-filter" onclick="carregarRegistros()">Filtrar</button>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Data</th>
-              <th>Colaborador</th>
-              <th>Função</th>
-              <th>Entrada</th>
-              <th>Saída</th>
-              <th>H. Extras</th>
-              <th>Placa</th>
-              <th>Romaneio</th>
-              <th>Cidade/UF</th>
-              <th>Pernoite</th>
-              <th>Vale</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaRegistros">
-            <tr><td colspan="12" class="empty-state">Carregando...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div>
-</div>
-
 <div id="toast"></div>
 
 <script>
   let TOKEN = localStorage.getItem('adminToken') || '';
+  let abaAtual = 'pernoites';
 
   function showToast(msg, type = 'success') {
     const t = document.getElementById('toast');
@@ -686,74 +456,107 @@
     carregarStats();
     carregarRegistros();
     carregarColaboradores();
-    // Preenche ano e mês atual no PDF
+    preencherSelectColaboradores();
+    // Define datas padrão (mês atual)
     const agora = new Date();
-    document.getElementById('pdfAno').value = agora.getFullYear();
-    document.getElementById('pdfMes').value = agora.getMonth() + 1;
+    const di = `${agora.getFullYear()}-${String(agora.getMonth()+1).padStart(2,'0')}-01`;
+    const df = new Date(agora.getFullYear(), agora.getMonth()+1, 0).toISOString().slice(0,10);
+    document.getElementById('relDi').value = di;
+    document.getElementById('relDf').value = df;
+    document.getElementById('pdfDi').value = di;
+    document.getElementById('pdfDf').value = df;
   }
 
-  async function carregarStats() {
-    try {
-      const res = await fetch('/api/admin/stats', { headers: { 'x-admin-token': TOKEN } });
-      const data = await res.json();
-      document.getElementById('statTotal').textContent    = data.total;
-      document.getElementById('statPernoites').textContent = data.pernoites;
-      document.getElementById('statVales').textContent    = data.vales;
-      document.getElementById('statHoras').textContent    = data.horasExtras;
-    } catch(e) {}
+  // ── ABAS ──
+  function mudarAba(aba, btn) {
+    abaAtual = aba;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`tab-${aba}`).classList.add('active');
   }
 
-  async function carregarRegistros() {
-    const nome = document.getElementById('filtroNome').value.trim();
-    const di   = document.getElementById('filtroDi').value;
-    const df   = document.getElementById('filtroDf').value;
-    const params = new URLSearchParams();
-    if (nome) params.set('colaborador', nome);
-    if (di)   params.set('dataInicio', di);
-    if (df)   params.set('dataFim', df);
+  // ── RELATÓRIOS ──
+  async function carregarRelatorio() {
+    const di = document.getElementById('relDi').value;
+    const df = document.getElementById('relDf').value;
 
-    const tbody = document.getElementById('tabelaRegistros');
-    tbody.innerHTML = `<tr><td colspan="12" class="empty-state">Carregando...</td></tr>`;
+    await Promise.all([
+      carregarAba('pernoites', di, df),
+      carregarAba('vale-descarga', di, df),
+      carregarAba('horas-extras', di, df),
+    ]);
+  }
+
+  async function carregarAba(tipo, di, df) {
+    const params = new URLSearchParams({ tipo });
+    if (di) params.set('dataInicio', di);
+    if (df) params.set('dataFim', df);
 
     try {
-      const res  = await fetch(`/api/admin/registros?${params}`, { headers: { 'x-admin-token': TOKEN } });
+      const res  = await fetch(`/api/admin/relatorio?${params}`, { headers: { 'x-admin-token': TOKEN } });
       const rows = await res.json();
 
-      if (!rows.length) {
-        tbody.innerHTML = `<tr><td colspan="12" class="empty-state">Nenhum registro encontrado.</td></tr>`;
-        return;
-      }
-
-      function minToHHMM(min) {
-        if (!min) return '—';
-        return `${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`;
-      }
-
-      tbody.innerHTML = rows.map(r => `
-        <tr>
-          <td style="color:var(--muted)">${r.id}</td>
-          <td>${r.data_registro}</td>
-          <td style="color:var(--text);font-weight:600">${r.nome_colaborador}</td>
-          <td><span class="badge ${r.funcao === 'motorista' ? 'badge-motor' : 'badge-ajud'}">${r.funcao}</span></td>
-          <td>${r.hora_entrada}</td>
-          <td>${r.hora_saida}</td>
-          <td style="color:${r.horas_extras_min > 0 ? 'var(--accent)' : 'var(--muted)'}">${minToHHMM(r.horas_extras_min)}</td>
-          <td>${r.placa}</td>
-          <td>${r.romaneio}</td>
-          <td>${r.cidade}/${r.uf}</td>
-          <td><span class="badge ${r.pernoite ? 'badge-yes' : 'badge-no'}">${r.pernoite ? 'SIM' : 'NÃO'}</span></td>
-          <td><span class="badge ${r.vale_descarga ? 'badge-yes' : 'badge-no'}">${r.vale_descarga ? 'SIM' : 'NÃO'}</span></td>
-        </tr>
-      `).join('');
+      if (tipo === 'pernoites') renderPernoites(rows);
+      else if (tipo === 'vale-descarga') renderValeDescarga(rows);
+      else renderHorasExtras(rows);
     } catch(e) {
-      tbody.innerHTML = `<tr><td colspan="12" class="empty-state">Erro ao carregar registros.</td></tr>`;
+      console.error('Erro ao carregar aba:', tipo, e);
     }
   }
 
-  async function baixarExcel() {
-    const tipo = document.getElementById('excelTipo').value;
-    const di   = document.getElementById('excelDi').value;
-    const df   = document.getElementById('excelDf').value;
+  function renderPernoites(rows) {
+    const tbody = document.getElementById('tbodyPernoites');
+    if (!rows.length) { tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Nenhum registro encontrado.</td></tr>`; return; }
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.DIA || r['DIA']}</td>
+        <td>${r.PLACA || r['PLACA']}</td>
+        <td>${r.CIDADE || r['CIDADE']}</td>
+        <td>${r.UF || r['UF']}</td>
+        <td>${r.DOCUMENTO || r['DOCUMENTO']}</td>
+        <td style="color:var(--success)">${r['SERVIÇO'] || r.SERVICO || ''}</td>
+        <td style="color:var(--muted)">${r._colaborador || ''}</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderValeDescarga(rows) {
+    const tbody = document.getElementById('tbodyValeDescarga');
+    if (!rows.length) { tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Nenhum registro encontrado.</td></tr>`; return; }
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.DIA || r['DIA']}</td>
+        <td>${r.PLACA || r['PLACA']}</td>
+        <td>${r.CIDADE || r['CIDADE']}</td>
+        <td>${r.UF || r['UF']}</td>
+        <td>${r.DOCUMENTO || r['DOCUMENTO']}</td>
+        <td style="color:var(--success)">${r['SERVIÇO'] || r.SERVICO || ''}</td>
+        <td style="color:var(--muted)">${r._colaborador || ''}</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderHorasExtras(rows) {
+    const tbody = document.getElementById('tbodyHorasExtras');
+    if (!rows.length) { tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Nenhum registro encontrado.</td></tr>`; return; }
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r['Dia'] || ''}</td>
+        <td>${r['Entrada'] || ''}</td>
+        <td>${r['Saída'] || ''}</td>
+        <td style="color:var(--accent)">${r['Hora Extra'] || ''}</td>
+        <td>${r['Romaneio / OC'] || ''}</td>
+        <td style="font-weight:600">${r['Nome do Colaborador'] || ''}</td>
+        <td><span class="badge ${r['Função'] === 'motorista' ? 'badge-motor' : 'badge-ajud'}">${r['Função'] || ''}</span></td>
+      </tr>
+    `).join('');
+  }
+
+  async function baixarExcelAtual() {
+    const di  = document.getElementById('relDi').value;
+    const df  = document.getElementById('relDf').value;
+    const tipo = abaAtual;
     try {
       const res = await fetch('/api/exportar', {
         method: 'POST',
@@ -770,17 +573,39 @@
     } catch(e) { showToast(e.message, 'error'); }
   }
 
+  // ── PDF ──
+  async function preencherSelectColaboradores() {
+    try {
+      const res  = await fetch('/api/admin/colaboradores', { headers: { 'x-admin-token': TOKEN } });
+      const rows = await res.json();
+      const sel  = document.getElementById('pdfColaborador');
+      sel.innerHTML = '<option value="">Selecione o colaborador...</option>';
+      rows.filter(c => c.ativo).forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.nome_completo;
+        opt.textContent = c.nome_completo;
+        sel.appendChild(opt);
+      });
+    } catch(e) {}
+  }
+
   async function baixarPdf() {
     const tipo        = document.getElementById('pdfTipo').value;
-    const colaborador = document.getElementById('pdfColaborador').value.trim();
-    const ano         = document.getElementById('pdfAno').value;
-    const mes         = document.getElementById('pdfMes').value;
-    if (!colaborador) { showToast('Informe o nome do colaborador.', 'error'); return; }
+    const colaborador = document.getElementById('pdfColaborador').value;
+    const di          = document.getElementById('pdfDi').value;
+    const df          = document.getElementById('pdfDf').value;
+
+    if (!colaborador) { showToast('Selecione o colaborador.', 'error'); return; }
+    if (!di || !df)   { showToast('Informe o período.', 'error'); return; }
+
+    // Converte intervalo para ano/mes (usa o mês da data início)
+    const [ano, mes] = di.split('-').map(Number);
+
     try {
       const res = await fetch('/api/gerar-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
-        body: JSON.stringify({ tipo, colaborador, ano: parseInt(ano), mes: parseInt(mes) })
+        body: JSON.stringify({ tipo, colaborador, ano, mes })
       });
       if (!res.ok) throw new Error('Falha ao gerar PDF.');
       const blob = await res.blob();
@@ -792,165 +617,279 @@
     } catch(e) { showToast(e.message, 'error'); }
   }
 
-  async function dispararEnvio(tipo) {
-    if (!confirm(`Confirma o envio de ${tipo} agora?`)) return;
+  // ── STATS ──
+  async function carregarStats() {
     try {
-      showToast('Enviando... aguarde.', 'success');
-      const res  = await fetch('/api/testar-envio', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
-        body: JSON.stringify({ tipo })
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error);
-      showToast(`✓ ${json.mensagem}`);
-    } catch(e) { showToast(e.message, 'error'); }
+      const res  = await fetch('/api/admin/stats', { headers: { 'x-admin-token': TOKEN } });
+      const data = await res.json();
+      document.getElementById('statTotal').textContent     = data.total;
+      document.getElementById('statPernoites').textContent = data.pernoites;
+      document.getElementById('statVales').textContent     = data.vales;
+      document.getElementById('statHoras').textContent     = data.horasExtras;
+    } catch(e) {}
   }
 
-  // Entra/sai pelo Enter no login
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') doLogin();
-  });
+ async function carregarRegistros() {
+  const romaneio = document.getElementById('filtroRomaneio').value.trim();
+  const params = new URLSearchParams();
+  if (romaneio) params.set('romaneio', romaneio);
 
-  // ===== Colaboradores =====
-let resetColabId = null;
+  const tbody = document.getElementById('tabelaRegistros');
+  tbody.innerHTML = `<tr><td colspan="13" class="empty-state">Carregando...</td></tr>`;
 
-async function carregarColaboradores() {
-  const tbody = document.getElementById('tabelaColaboradores');
-  tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Carregando...</td></tr>`;
   try {
-    const res  = await fetch('/api/admin/colaboradores', { headers: { 'x-admin-token': TOKEN } });
+    const res  = await fetch(`/api/admin/registros?${params}`, { headers: { 'x-admin-token': TOKEN } });
     const rows = await res.json();
 
     if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Nenhum colaborador cadastrado.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="13" class="empty-state">Nenhum registro encontrado.</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = rows.map(c => `
-      <tr>
-        <td style="color:var(--muted)">${c.id}</td>
-        <td style="color:var(--accent)">${c.username}</td>
-        <td style="font-weight:600">${c.nome_completo}</td>
+    function minToHHMM(min) {
+      if (!min) return '—';
+      return `${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`;
+    }
+
+    tbody.innerHTML = rows.map(r => `
+      <tr id="row-${r.id}" data-id="${r.id}">
+        <td style="color:var(--muted)">${r.id}</td>
+        <td><input class="cell-input" type="date" value="${r.data_registro}" data-field="data_registro"/></td>
+        <td style="color:var(--text);font-weight:600">${r.nome_colaborador}</td>
+        <td><span class="badge ${r.funcao === 'motorista' ? 'badge-motor' : 'badge-ajud'}">${r.funcao}</span></td>
+        <td><input class="cell-input" type="time" value="${r.hora_entrada}" data-field="hora_entrada"/></td>
+        <td><input class="cell-input" type="time" value="${r.hora_saida}" data-field="hora_saida"/></td>
+        <td style="color:${r.horas_extras_min > 0 ? 'var(--accent)' : 'var(--muted)'}" id="extras-${r.id}">${minToHHMM(r.horas_extras_min)}</td>
+        <td><input class="cell-input" type="text" value="${r.placa}" data-field="placa" style="width:100px"/></td>
+        <td><input class="cell-input" type="text" value="${r.romaneio}" data-field="romaneio" style="width:90px"/></td>
         <td>
-          <span class="badge ${c.ativo ? 'badge-yes' : 'badge-no'}">${c.ativo ? 'ATIVO' : 'INATIVO'}</span>
+          <input class="cell-input" type="text" value="${r.uf}" data-field="uf" style="width:36px"/>
+          /
+          <input class="cell-input" type="text" value="${r.cidade}" data-field="cidade" style="width:110px"/>
         </td>
-        <td>${c.criado_em.slice(0,10)}</td>
-        <td style="display:flex; gap:6px;">
-          <button class="btn-action" style="padding:4px 10px; font-size:10px;"
-            onclick="abrirModalReset(${c.id}, '${c.nome_completo}')">Reset Senha</button>
-          <button class="btn-action ${c.ativo ? 'danger' : ''}" style="padding:4px 10px; font-size:10px;"
-            onclick="toggleStatus(${c.id}, ${c.ativo})">
-            ${c.ativo ? 'Desativar' : 'Ativar'}
-          </button>
+        <td>
+          <select class="cell-input" data-field="pernoite" style="width:60px">
+            <option value="1" ${r.pernoite ? 'selected' : ''}>SIM</option>
+            <option value="0" ${!r.pernoite ? 'selected' : ''}>NÃO</option>
+          </select>
+          <input class="cell-input" type="number" value="${r.valor_pernoite || 50}" data-field="valor_pernoite" style="width:60px" ${!r.pernoite ? 'disabled' : ''}/>
+        </td>
+        <td>
+          <select class="cell-input" data-field="vale_descarga" style="width:60px">
+            <option value="1" ${r.vale_descarga ? 'selected' : ''}>SIM</option>
+            <option value="0" ${!r.vale_descarga ? 'selected' : ''}>NÃO</option>
+          </select>
+          <input class="cell-input" type="number" value="${r.valor_vale_descarga || 100}" data-field="valor_vale_descarga" style="width:60px" ${!r.vale_descarga ? 'disabled' : ''}/>
+        </td>
+        <td>
+          <button class="btn-action accent" style="padding:4px 12px; font-size:10px; width:auto;" onclick="salvarRegistro(${r.id})">Salvar</button>
         </td>
       </tr>
     `).join('');
-  } catch(e) {
-    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Erro ao carregar.</td></tr>`;
-  }
-}
 
-function mostrarModalNovoColab() {
-  document.getElementById('colabNome').value = '';
-  document.getElementById('colabUsername').value = '';
-  document.getElementById('colabSenha').value = '';
-  document.getElementById('colabErro').style.display = 'none';
-  document.getElementById('modalColab').style.display = 'flex';
-}
-function fecharModalColab() {
-  document.getElementById('modalColab').style.display = 'none';
-}
-
-async function cadastrarColab() {
-  const nome     = document.getElementById('colabNome').value.trim();
-  const username = document.getElementById('colabUsername').value.trim();
-  const senha    = document.getElementById('colabSenha').value.trim();
-  const funcao   = document.getElementById('colabFuncao').value;
-  const erroEl   = document.getElementById('colabErro');
-  erroEl.style.display = 'none';
-
-  if (!nome || !username || !senha) {
-    erroEl.textContent = 'Preencha todos os campos.';
-    erroEl.style.display = 'block';
-    return;
-  }
-
-  try {
-    const res  = await fetch('/api/admin/colaboradores', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
-      body: JSON.stringify({ nome_completo: nome, username, senha, funcao })
+    tbody.querySelectorAll('select[data-field="pernoite"]').forEach(sel => {
+      sel.addEventListener('change', () => {
+        const row = sel.closest('tr');
+        const valorInput = row.querySelector('input[data-field="valor_pernoite"]');
+        if (valorInput) valorInput.disabled = sel.value === '0';
+      });
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error);
+    tbody.querySelectorAll('select[data-field="vale_descarga"]').forEach(sel => {
+      sel.addEventListener('change', () => {
+        const row = sel.closest('tr');
+        const valorInput = row.querySelector('input[data-field="valor_vale_descarga"]');
+        if (valorInput) valorInput.disabled = sel.value === '0';
+      });
+    });
 
-    fecharModalColab();
-    carregarColaboradores();
-    showToast(`✓ Colaborador ${nome} cadastrado!`);
   } catch(e) {
-    erroEl.textContent = e.message;
-    erroEl.style.display = 'block';
+    tbody.innerHTML = `<tr><td colspan="13" class="empty-state">Erro ao carregar registros.</td></tr>`;
   }
 }
 
-function abrirModalReset(id, nome) {
-  resetColabId = id;
-  document.getElementById('resetNome').textContent = nome;
-  document.getElementById('resetSenha').value = '';
-  document.getElementById('resetErro').style.display = 'none';
-  document.getElementById('modalReset').style.display = 'flex';
-}
-function fecharModalReset() {
-  document.getElementById('modalReset').style.display = 'none';
-}
+async function salvarRegistro(id) {
+  const row = document.getElementById(`row-${id}`);
+  const get = (field) => row.querySelector(`[data-field="${field}"]`)?.value;
 
-async function confirmarReset() {
-  const novaSenha = document.getElementById('resetSenha').value.trim();
-  const erroEl    = document.getElementById('resetErro');
-  erroEl.style.display = 'none';
-
-  if (!novaSenha) {
-    erroEl.textContent = 'Informe a nova senha.';
-    erroEl.style.display = 'block';
-    return;
-  }
+  const pernoite     = get('pernoite') === '1';
+  const vale_descarga = get('vale_descarga') === '1';
 
   try {
-    const res  = await fetch(`/api/admin/colaboradores/${resetColabId}/reset-senha`, {
+    const res = await fetch(`/api/admin/registros/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
-      body: JSON.stringify({ novaSenha })
+      body: JSON.stringify({
+        data_registro:       get('data_registro'),
+        hora_entrada:        get('hora_entrada'),
+        hora_saida:          get('hora_saida'),
+        placa:               get('placa'),
+        romaneio:            get('romaneio'),
+        uf:                  get('uf'),
+        cidade:              get('cidade'),
+        pernoite,
+        valor_pernoite:      get('valor_pernoite'),
+        vale_descarga,
+        valor_vale_descarga: get('valor_vale_descarga'),
+      })
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error);
 
-    fecharModalReset();
-    showToast('✓ Senha resetada com sucesso!');
-  } catch(e) {
-    erroEl.textContent = e.message;
-    erroEl.style.display = 'block';
-  }
-}
+    // Atualiza o campo de horas extras na linha
+    function minToHHMM(min) {
+      if (!min) return '—';
+      return `${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`;
+    }
+    const extrasEl = document.getElementById(`extras-${id}`);
+    if (extrasEl) {
+      extrasEl.textContent = minToHHMM(json.horas_extras_min);
+      extrasEl.style.color = json.horas_extras_min > 0 ? 'var(--accent)' : 'var(--muted)';
+    }
 
-async function toggleStatus(id, ativoAtual) {
-  try {
-    const res  = await fetch(`/api/admin/colaboradores/${id}/status`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
-      body: JSON.stringify({ ativo: !ativoAtual })
-    });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error);
-
-    carregarColaboradores();
-    showToast(`✓ Status atualizado!`);
+    showToast(`✓ Registro #${id} salvo!`);
   } catch(e) {
     showToast(e.message, 'error');
   }
 }
 
-  // Verifica se já tem token salvo
+  // ── COLABORADORES ──
+  let resetColabId = null;
+
+  async function carregarColaboradores() {
+    const tbody = document.getElementById('tabelaColaboradores');
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Carregando...</td></tr>`;
+    try {
+      const res  = await fetch('/api/admin/colaboradores', { headers: { 'x-admin-token': TOKEN } });
+      const rows = await res.json();
+
+      if (!rows.length) { tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Nenhum colaborador cadastrado.</td></tr>`; return; }
+
+      tbody.innerHTML = rows.map(c => `
+        <tr>
+          <td style="color:var(--muted)">${c.id}</td>
+          <td style="color:var(--accent)">${c.username}</td>
+          <td style="font-weight:600">${c.nome_completo}</td>
+          <td><span class="badge ${c.funcao === 'motorista' ? 'badge-motor' : 'badge-ajud'}">${c.funcao || '—'}</span></td>
+          <td><span class="badge ${c.ativo ? 'badge-yes' : 'badge-no'}">${c.ativo ? 'ATIVO' : 'INATIVO'}</span></td>
+          <td>${c.criado_em.slice(0,10)}</td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-action" style="padding:4px 10px; font-size:10px;"
+              onclick="abrirModalReset(${c.id}, '${c.nome_completo}')">Reset Senha</button>
+            <button class="btn-action ${c.ativo ? 'danger' : ''}" style="padding:4px 10px; font-size:10px;"
+              onclick="toggleStatus(${c.id}, ${c.ativo})">
+              ${c.ativo ? 'Desativar' : 'Ativar'}
+            </button>
+            <button class="btn-action danger" style="padding:4px 10px; font-size:10px;"
+              onclick="deletarColab(${c.id}, '${c.nome_completo}')">Deletar</button>
+          </td>
+        </tr>
+      `).join('');
+    } catch(e) {
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Erro ao carregar.</td></tr>`;
+    }
+  }
+
+  async function deletarColab(id, nome) {
+    if (!confirm(`Confirma a exclusão de ${nome}? Esta ação não pode ser desfeita.`)) return;
+    try {
+      const res  = await fetch(`/api/admin/colaboradores/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-token': TOKEN }
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      carregarColaboradores();
+      preencherSelectColaboradores();
+      showToast(`✓ ${nome} removido.`);
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  function mostrarModalNovoColab() {
+    document.getElementById('colabNome').value = '';
+    document.getElementById('colabUsername').value = '';
+    document.getElementById('colabSenha').value = '';
+    document.getElementById('colabErro').style.display = 'none';
+    document.getElementById('modalColab').style.display = 'flex';
+  }
+  function fecharModalColab() { document.getElementById('modalColab').style.display = 'none'; }
+
+  async function cadastrarColab() {
+    const nome     = document.getElementById('colabNome').value.trim();
+    const username = document.getElementById('colabUsername').value.trim();
+    const senha    = document.getElementById('colabSenha').value.trim();
+    const funcao   = document.getElementById('colabFuncao').value;
+    const erroEl   = document.getElementById('colabErro');
+    erroEl.style.display = 'none';
+
+    if (!nome || !username || !senha) {
+      erroEl.textContent = 'Preencha todos os campos.';
+      erroEl.style.display = 'block';
+      return;
+    }
+
+    try {
+      const res  = await fetch('/api/admin/colaboradores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
+        body: JSON.stringify({ nome_completo: nome, username, senha, funcao })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      fecharModalColab();
+      carregarColaboradores();
+      preencherSelectColaboradores();
+      showToast(`✓ Colaborador ${nome} cadastrado!`);
+    } catch(e) {
+      erroEl.textContent = e.message;
+      erroEl.style.display = 'block';
+    }
+  }
+
+  function abrirModalReset(id, nome) {
+    resetColabId = id;
+    document.getElementById('resetNome').textContent = nome;
+    document.getElementById('resetSenha').value = '';
+    document.getElementById('resetErro').style.display = 'none';
+    document.getElementById('modalReset').style.display = 'flex';
+  }
+  function fecharModalReset() { document.getElementById('modalReset').style.display = 'none'; }
+
+  async function confirmarReset() {
+    const novaSenha = document.getElementById('resetSenha').value.trim();
+    const erroEl    = document.getElementById('resetErro');
+    erroEl.style.display = 'none';
+    if (!novaSenha) { erroEl.textContent = 'Informe a nova senha.'; erroEl.style.display = 'block'; return; }
+    try {
+      const res  = await fetch(`/api/admin/colaboradores/${resetColabId}/reset-senha`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
+        body: JSON.stringify({ novaSenha })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      fecharModalReset();
+      showToast('✓ Senha resetada com sucesso!');
+    } catch(e) { erroEl.textContent = e.message; erroEl.style.display = 'block'; }
+  }
+
+  async function toggleStatus(id, ativoAtual) {
+    try {
+      const res  = await fetch(`/api/admin/colaboradores/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
+        body: JSON.stringify({ ativo: !ativoAtual })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      carregarColaboradores();
+      showToast('✓ Status atualizado!');
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') doLogin();
+  });
+
   if (TOKEN) mostrarDashboard();
 </script>
 </body>
