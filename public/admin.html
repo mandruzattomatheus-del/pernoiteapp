@@ -315,7 +315,7 @@
           <thead>
             <tr>
               <th>#</th><th>Username</th><th>Nome Completo</th>
-              <th>Função</th><th>Status</th><th>Cadastrado em</th><th>Ações</th>
+              <th>Função</th><th>E-mail</th><th>Status</th><th>Cadastrado em</th><th>Ações</th>
             </tr>
           </thead>
           <tbody id="tabelaColaboradores">
@@ -332,9 +332,13 @@
       </div>
       <div class="table-wrap">
         <div class="filters">
-          <input type="text" id="filtroRomaneio" placeholder="Buscar por romaneio..."/>
+          <input type="text" id="filtroRomaneio" placeholder="Romaneio exato..."/>
+          <input type="text" id="filtroColaborador" placeholder="Nome do colaborador..."/>
+          <input type="date" id="filtroDi"/>
+          <input type="date" id="filtroDf"/>
           <button class="btn-filter" onclick="carregarRegistros()">Filtrar</button>
-          <button class="btn-filter" style="background:var(--surface2); color:var(--muted); border:1px solid var(--border);" onclick="document.getElementById('filtroRomaneio').value=''; carregarRegistros()">Limpar</button>
+          <button class="btn-filter" style="background:var(--surface2); color:var(--muted); border:1px solid var(--border);" onclick="limparFiltros()">Limpar</button>
+      </div>
         </div>
         </div>
         <table>
@@ -382,6 +386,11 @@
       <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Senha Inicial</label>
       <input id="colabSenha" type="text" placeholder="ex: Mudar@26"
         style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;"/>
+    </div>
+    <div style="margin-bottom:24px;">
+      <label style="display:block; font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">E-mail</label>
+      <input id="colabEmail" type="email" placeholder="colaborador@email.com"
+    style="width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none;"/>
     </div>
     <div style="display:flex; gap:10px;">
       <button class="btn-action accent" style="flex:1;" onclick="cadastrarColab()">Cadastrar</button>
@@ -630,9 +639,16 @@
   }
 
  async function carregarRegistros() {
-  const romaneio = document.getElementById('filtroRomaneio').value.trim();
+  const romaneio    = document.getElementById('filtroRomaneio').value.trim();
+  const colaborador = document.getElementById('filtroColaborador').value.trim();
+  const di          = document.getElementById('filtroDi').value;
+  const df          = document.getElementById('filtroDf').value;
+
   const params = new URLSearchParams();
-  if (romaneio) params.set('romaneio', romaneio);
+  if (romaneio)    params.set('romaneio', romaneio);
+  if (colaborador) params.set('colaborador', colaborador);
+  if (di)          params.set('dataInicio', di);
+  if (df)          params.set('dataFim', df);
 
   const tbody = document.getElementById('tabelaRegistros');
   tbody.innerHTML = `<tr><td colspan="13" class="empty-state">Carregando...</td></tr>`;
@@ -707,6 +723,14 @@
   }
 }
 
+function limparFiltros() {
+  document.getElementById('filtroRomaneio').value = '';
+  document.getElementById('filtroColaborador').value = '';
+  document.getElementById('filtroDi').value = '';
+  document.getElementById('filtroDf').value = '';
+  carregarRegistros();
+}
+
 async function salvarRegistro(id) {
   const row = document.getElementById(`row-${id}`);
   const get = (field) => row.querySelector(`[data-field="${field}"]`)?.value;
@@ -757,7 +781,7 @@ async function salvarRegistro(id) {
 
   async function carregarColaboradores() {
     const tbody = document.getElementById('tabelaColaboradores');
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Carregando...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="empty-state">Carregando...</td></tr>`;
     try {
       const res  = await fetch('/api/admin/colaboradores', { headers: { 'x-admin-token': TOKEN } });
       const rows = await res.json();
@@ -765,25 +789,26 @@ async function salvarRegistro(id) {
       if (!rows.length) { tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Nenhum colaborador cadastrado.</td></tr>`; return; }
 
       tbody.innerHTML = rows.map(c => `
-        <tr>
-          <td style="color:var(--muted)">${c.id}</td>
-          <td style="color:var(--accent)">${c.username}</td>
-          <td style="font-weight:600">${c.nome_completo}</td>
-          <td><span class="badge ${c.funcao === 'motorista' ? 'badge-motor' : 'badge-ajud'}">${c.funcao || '—'}</span></td>
-          <td><span class="badge ${c.ativo ? 'badge-yes' : 'badge-no'}">${c.ativo ? 'ATIVO' : 'INATIVO'}</span></td>
-          <td>${c.criado_em.slice(0,10)}</td>
-          <td style="display:flex; gap:6px;">
-            <button class="btn-action" style="padding:4px 10px; font-size:10px;"
-              onclick="abrirModalReset(${c.id}, '${c.nome_completo}')">Reset Senha</button>
-            <button class="btn-action ${c.ativo ? 'danger' : ''}" style="padding:4px 10px; font-size:10px;"
-              onclick="toggleStatus(${c.id}, ${c.ativo})">
-              ${c.ativo ? 'Desativar' : 'Ativar'}
-            </button>
-            <button class="btn-action danger" style="padding:4px 10px; font-size:10px;"
-              onclick="deletarColab(${c.id}, '${c.nome_completo}')">Deletar</button>
-          </td>
-        </tr>
-      `).join('');
+      <tr>
+        <td style="color:var(--muted)">${c.id}</td>
+        <td style="color:var(--accent)">${c.username}</td>
+        <td style="font-weight:600">${c.nome_completo}</td>
+        <td><span class="badge ${c.funcao === 'motorista' ? 'badge-motor' : 'badge-ajud'}">${c.funcao || '—'}</span></td>
+        <td style="color:var(--muted)">${c.email || '—'}</td>
+        <td><span class="badge ${c.ativo ? 'badge-yes' : 'badge-no'}">${c.ativo ? 'ATIVO' : 'INATIVO'}</span></td>
+        <td>${c.criado_em.slice(0,10)}</td>
+        <td style="display:flex; gap:6px;">
+          <button class="btn-action" style="padding:4px 10px; font-size:10px;"
+            onclick="abrirModalReset(${c.id}, '${c.nome_completo}')">Reset Senha</button>
+          <button class="btn-action ${c.ativo ? 'danger' : ''}" style="padding:4px 10px; font-size:10px;"
+            onclick="toggleStatus(${c.id}, ${c.ativo})">
+            ${c.ativo ? 'Desativar' : 'Ativar'}
+          </button>
+          <button class="btn-action danger" style="padding:4px 10px; font-size:10px;"
+            onclick="deletarColab(${c.id}, '${c.nome_completo}')">Deletar</button>
+        </td>
+      </tr>
+    `).join('');
     } catch(e) {
       tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Erro ao carregar.</td></tr>`;
     }
@@ -808,6 +833,7 @@ async function salvarRegistro(id) {
     document.getElementById('colabNome').value = '';
     document.getElementById('colabUsername').value = '';
     document.getElementById('colabSenha').value = '';
+    document.getElementById('colabEmail').value = '';
     document.getElementById('colabErro').style.display = 'none';
     document.getElementById('modalColab').style.display = 'flex';
   }
@@ -817,12 +843,13 @@ async function salvarRegistro(id) {
     const nome     = document.getElementById('colabNome').value.trim();
     const username = document.getElementById('colabUsername').value.trim();
     const senha    = document.getElementById('colabSenha').value.trim();
+    const email    = document.getElementById('colabEmail').value.trim();
     const funcao   = document.getElementById('colabFuncao').value;
     const erroEl   = document.getElementById('colabErro');
     erroEl.style.display = 'none';
 
     if (!nome || !username || !senha) {
-      erroEl.textContent = 'Preencha todos os campos.';
+      erroEl.textContent = 'Preencha todos os campos obrigatórios.';
       erroEl.style.display = 'block';
       return;
     }
@@ -831,7 +858,7 @@ async function salvarRegistro(id) {
       const res  = await fetch('/api/admin/colaboradores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
-        body: JSON.stringify({ nome_completo: nome, username, senha, funcao })
+        body: JSON.stringify({ nome_completo: nome, username, senha, funcao, email })
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);

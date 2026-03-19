@@ -10,23 +10,13 @@
     .senha-wrap { position: relative; }
     .senha-wrap input { width: 100%; padding-right: 40px; }
     .senha-wrap .btn-olho {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: #666;
-      cursor: pointer;
-      font-size: 14px;
-      padding: 0;
-      line-height: 1;
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: #666; cursor: pointer; font-size: 14px; padding: 0; line-height: 1;
     }
   </style>
 </head>
 <body>
 
-<!-- TELA DE LOGIN -->
 <div id="loginScreen" style="display:flex; align-items:center; justify-content:center; min-height:100vh; background:#0a0a0a;">
   <div style="width:100%; max-width:360px; padding:24px;">
     <div style="text-align:center; margin-bottom:32px;">
@@ -56,13 +46,10 @@
       </button>
       <div id="loginErro" style="display:none; margin-top:12px; color:#ff3b3b; font-size:12px; font-family:monospace; text-align:center;"></div>
     </div>
-    <p style="text-align:center; margin-top:16px; font-size:11px; color:#444; font-family:monospace;">
-      Problemas para acessar? Fale com o seu gestor.
-    </p>
+    <p style="text-align:center; margin-top:16px; font-size:11px; color:#444; font-family:monospace;">Problemas para acessar? Fale com o seu gestor.</p>
   </div>
 </div>
 
-<!-- TELA DE TROCA DE SENHA -->
 <div id="trocaSenhaScreen" style="display:none; align-items:center; justify-content:center; min-height:100vh; background:#0a0a0a;">
   <div style="width:100%; max-width:360px; padding:24px;">
     <div style="text-align:center; margin-bottom:32px;">
@@ -71,7 +58,6 @@
     </div>
     <div style="background:#1a1a1a; border:1px solid #2a2a2a; padding:28px; border-radius:4px; position:relative;">
       <div style="position:absolute; top:0; left:0; width:40px; height:2px; background:#e8ff00;"></div>
-
       <div style="margin-bottom:16px;">
         <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Senha Atual</label>
         <div class="senha-wrap">
@@ -81,7 +67,6 @@
           <button type="button" class="btn-olho" onclick="toggleSenha('senhaAtual', this)">👁</button>
         </div>
       </div>
-
       <div style="margin-bottom:16px;">
         <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Nova Senha</label>
         <div class="senha-wrap">
@@ -91,7 +76,6 @@
           <button type="button" class="btn-olho" onclick="toggleSenha('novaSenha', this)">👁</button>
         </div>
       </div>
-
       <div style="margin-bottom:20px;">
         <label style="display:block; font-size:11px; color:#666; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; font-family:monospace;">Confirmar Nova Senha</label>
         <div class="senha-wrap">
@@ -101,7 +85,6 @@
           <button type="button" class="btn-olho" onclick="toggleSenha('confirmarSenha', this)">👁</button>
         </div>
       </div>
-
       <button onclick="trocarSenha()"
         style="width:100%; background:#e8ff00; color:#000; border:none; padding:13px; font-weight:700; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:2px; margin-bottom:10px;">
         SALVAR NOVA SENHA
@@ -123,14 +106,8 @@
       <div id="userFuncao" style="font-size:10px; color:#666; font-family:monospace; letter-spacing:0.1em; text-transform:uppercase; margin-top:2px;"></div>
     </div>
     <div style="display:flex; gap:8px;">
-      <button onclick="mostrarTrocaSenha()"
-        style="background:transparent; border:1px solid #2a2a2a; color:#888; padding:5px 12px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:monospace;">
-        Trocar Senha
-      </button>
-      <button onclick="fazerLogout()"
-        style="background:transparent; border:1px solid #2a2a2a; color:#888; padding:5px 12px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:monospace;">
-        Sair
-      </button>
+      <button onclick="mostrarTrocaSenha()" style="background:transparent; border:1px solid #2a2a2a; color:#888; padding:5px 12px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:monospace;">Trocar Senha</button>
+      <button onclick="fazerLogout()" style="background:transparent; border:1px solid #2a2a2a; color:#888; padding:5px 12px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:monospace;">Sair</button>
     </div>
   </div>
 
@@ -168,14 +145,12 @@
           <option>Wagner da Silva Peres Amaral</option>
           <option>Wilson de Souza</option>
         </select>
-
         <label for="temAjudante">Estava com ajudante?</label>
         <select id="temAjudante" name="tem_ajudante" disabled>
           <option value="">Selecione...</option>
           <option value="nao">Não</option>
           <option value="sim">Sim</option>
         </select>
-
         <div id="blocoAjudanteDoMotorista" class="hidden-section" aria-hidden="true">
           <label for="ajudanteDoMotorista">Selecione o Ajudante</label>
           <select id="ajudanteDoMotorista" name="ajudante_do_motorista" disabled>
@@ -207,7 +182,6 @@
           <option>Nivaldo de Barros</option>
           <option>Elias Borges de Macedo</option>
         </select>
-
         <label for="motoristaResponsavel">Motorista com quem estava *</label>
         <select id="motoristaResponsavel" name="motorista_responsavel" data-required disabled>
           <option value="">Selecione o motorista</option>
@@ -229,9 +203,6 @@
       </div>
 
       <hr>
-
-      <label for="emailColab">Digite seu email</label>
-      <input id="emailColab" type="email" name="email" data-required disabled>
 
       <label for="dataRegistro">Data *</label>
       <input id="dataRegistro" type="date" name="data_registro" data-required disabled>
@@ -285,32 +256,19 @@
       <label for="uf">UF *</label>
       <select id="uf" name="uf" data-required disabled>
         <option value="">Selecionar UF</option>
-        <option value="AC">AC - Acre</option>
-        <option value="AL">AL - Alagoas</option>
-        <option value="AP">AP - Amapá</option>
-        <option value="AM">AM - Amazonas</option>
-        <option value="BA">BA - Bahia</option>
-        <option value="CE">CE - Ceará</option>
-        <option value="DF">DF - Distrito Federal</option>
-        <option value="ES">ES - Espírito Santo</option>
-        <option value="GO">GO - Goiás</option>
-        <option value="MA">MA - Maranhão</option>
-        <option value="MT">MT - Mato Grosso</option>
-        <option value="MS">MS - Mato Grosso do Sul</option>
-        <option value="MG">MG - Minas Gerais</option>
-        <option value="PA">PA - Pará</option>
-        <option value="PB">PB - Paraíba</option>
-        <option value="PR">PR - Paraná</option>
-        <option value="PE">PE - Pernambuco</option>
-        <option value="PI">PI - Piauí</option>
-        <option value="RJ">RJ - Rio de Janeiro</option>
-        <option value="RN">RN - Rio Grande do Norte</option>
-        <option value="RS">RS - Rio Grande do Sul</option>
-        <option value="RO">RO - Rondônia</option>
-        <option value="RR">RR - Roraima</option>
-        <option value="SC">SC - Santa Catarina</option>
-        <option value="SP">SP - São Paulo</option>
-        <option value="SE">SE - Sergipe</option>
+        <option value="AC">AC - Acre</option><option value="AL">AL - Alagoas</option>
+        <option value="AP">AP - Amapá</option><option value="AM">AM - Amazonas</option>
+        <option value="BA">BA - Bahia</option><option value="CE">CE - Ceará</option>
+        <option value="DF">DF - Distrito Federal</option><option value="ES">ES - Espírito Santo</option>
+        <option value="GO">GO - Goiás</option><option value="MA">MA - Maranhão</option>
+        <option value="MT">MT - Mato Grosso</option><option value="MS">MS - Mato Grosso do Sul</option>
+        <option value="MG">MG - Minas Gerais</option><option value="PA">PA - Pará</option>
+        <option value="PB">PB - Paraíba</option><option value="PR">PR - Paraná</option>
+        <option value="PE">PE - Pernambuco</option><option value="PI">PI - Piauí</option>
+        <option value="RJ">RJ - Rio de Janeiro</option><option value="RN">RN - Rio Grande do Norte</option>
+        <option value="RS">RS - Rio Grande do Sul</option><option value="RO">RO - Rondônia</option>
+        <option value="RR">RR - Roraima</option><option value="SC">SC - Santa Catarina</option>
+        <option value="SP">SP - São Paulo</option><option value="SE">SE - Sergipe</option>
         <option value="TO">TO - Tocantins</option>
       </select>
 
@@ -336,7 +294,6 @@
   </form>
 </div>
 
-<!-- MODAL DUPLICIDADE -->
 <div id="modalDuplicidade" style="display:none; position:fixed; inset:0; background:#000000cc; z-index:9999; align-items:center; justify-content:center; padding:20px;">
   <div style="background:#1a1a1a; border:1px solid #2a2a2a; padding:28px; width:100%; max-width:380px; border-radius:4px; position:relative;">
     <div style="position:absolute; top:0; left:0; width:40px; height:2px; background:#e8ff00;"></div>
@@ -344,14 +301,8 @@
     <h3 style="font-family:'Syne',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px; color:#f0f0f0;">Registro Duplicado</h3>
     <p id="modalDuplicidadeMsg" style="font-size:13px; color:#888; line-height:1.6; margin-bottom:24px; font-family:monospace;"></p>
     <div style="display:flex; gap:10px;">
-      <button id="modalDuplicidadeConfirmar"
-        style="flex:1; background:#e8ff00; color:#000; border:none; padding:12px; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; border-radius:2px;">
-        Enviar Mesmo Assim
-      </button>
-      <button id="modalDuplicidadeCancelar"
-        style="flex:1; background:transparent; color:#888; border:1px solid #2a2a2a; padding:12px; font-family:'Syne',sans-serif; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; border-radius:2px;">
-        Cancelar
-      </button>
+      <button id="modalDuplicidadeConfirmar" style="flex:1; background:#e8ff00; color:#000; border:none; padding:12px; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; border-radius:2px;">Enviar Mesmo Assim</button>
+      <button id="modalDuplicidadeCancelar" style="flex:1; background:transparent; color:#888; border:1px solid #2a2a2a; padding:12px; font-family:'Syne',sans-serif; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; border-radius:2px;">Cancelar</button>
     </div>
   </div>
 </div>
